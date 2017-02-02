@@ -1,3 +1,26 @@
+/* Qt app for getting currency quotes from CB RF.
+ *
+ * Copyright 2017 Denis Trofimov <silaradost@yandex.ru>
+ * Based on modified DownloaderGui app by Max Schlee
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1301, USA.
+ *
+ *
+ */
+
 // ======================================================================
 //  DownloaderGui.h
 // ======================================================================
@@ -22,6 +45,7 @@
 
 #include <QWidget>
 #include <QUrl>
+#include <QLocale>
 
 class Downloader;
 class QProgressBar;
@@ -35,15 +59,20 @@ class DownloaderGui : public QWidget {
 Q_OBJECT
 
 private:
-    Downloader*   m_pdl;
-    QProgressBar* m_ppb;
-    QLineEdit*    m_ptxt;
-    QPushButton*  m_pcmd;
-    XmlCurrencyParser* m_pxcp;
-    QLabel* m_pcv; //valueToRUR
-    QLineEdit*    m_pcn; //currencyName
+    Downloader*   downloaderObject;
+    XmlCurrencyParser* xmlParserObject;
 
-    void showPic(const QString&);
+    QProgressBar* downProgressBar;
+    QPushButton*  goButton;
+
+    QLabel* currencyValueLabel; //valueToRUR
+    QLabel* currencyLabel;
+    QLabel* valueLable;
+    QLabel* dateLable;
+    QLineEdit*    currencyNameLineEdit; //currencyName
+    QLineEdit* dateLineEdit;
+    QLineEdit*    urlLineEdit;
+
 
 public:
     DownloaderGui(QWidget* pwgt = 0);
