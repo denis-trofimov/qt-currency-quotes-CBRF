@@ -46,6 +46,7 @@
 #include <QWidget>
 #include <QUrl>
 #include <QLocale>
+#include <QDate>
 
 class Downloader;
 class QProgressBar;
@@ -53,6 +54,7 @@ class QLineEdit;
 class QPushButton;
 class XmlCurrencyParser;
 class QLabel;
+class QDate;
 
 // ======================================================================
 class DownloaderGui : public QWidget {
@@ -65,25 +67,35 @@ private:
     QProgressBar* downProgressBar;
     QPushButton*  goButton;
 
-    QLabel* currencyValueLabel; //valueToRUR
+    QLabel* currencyValueLabel;
     QLabel* currencyLabel;
     QLabel* valueLable;
     QLabel* dateLable;
-    QLineEdit*    currencyNameLineEdit; //currencyName
+    QLabel* nominalLable;
+    QLabel* nominalValueLable;
+    QLabel* nameValueLable;
+    QLabel* nameLable;
+    QLineEdit* currencyCodeLineEdit;
     QLineEdit* dateLineEdit;
-    QLineEdit*    urlLineEdit;
+    QLineEdit* urlLineEdit;
 
+    QString currencyCode;
+    QString valueToRUR;
+    QDate date;
+    QString nominal;
+    QString currencyName;
 
 public:
     DownloaderGui(QWidget* pwgt = 0);
 
 signals:
     void loadedXml           (const QByteArray&             );
+
 private slots:
     void slotGo              (                              );
-    void slotError           (                              );
     void slotDownloadProgress(qint64, qint64                );
     void slotDone            (const QUrl&, const QByteArray&);
     void slotError           (const QString&                );
+    void slotError           (               );
 };
 

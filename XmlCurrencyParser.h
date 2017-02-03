@@ -24,10 +24,13 @@
 #ifndef XMLCURRENCYREADER_H
 #define XMLCURRENCYREADER_H
 
+#pragma once
+
 #include <QString>
 #include <QObject>
 #include <QtXml>
 #include <QDebug>
+#include <QLocale>
 
 class QXmlStreamReader;
 
@@ -37,12 +40,15 @@ Q_OBJECT
 private:
     void traverseNode(const QDomNode&);
 
-public:
-    QString currencyName;
-    bool isCurrencyNameFound, stopParse;
-    double valueToRUR;
+//public:
+    QString currencyCode;
+    QString valueToRUR;
     QString date;
-
+    QString nominal;
+    QString currencyName;
+    bool isCurrencyCodeFound, stopParse;
+public:
+//        XmlCurrencyParser(QObject* pobj = 0, const QString& curCode = QString("USD"));
     XmlCurrencyParser(QObject* pobj = 0);
 
 signals:
@@ -52,7 +58,7 @@ signals:
 
 public slots:
     void setCurrencyName(const QString&);
-    void getCurrecyValue(const QByteArray&);
+    void getCurrencyByCode(const QByteArray&);
 };
 
 #endif // XMLCURRENCYREADER_H

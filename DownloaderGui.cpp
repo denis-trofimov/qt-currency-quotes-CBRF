@@ -49,78 +49,96 @@
 // ----------------------------------------------------------------------
 DownloaderGui::DownloaderGui(QWidget* pwgt /*=0*/) : QWidget(pwgt)
 {
-    downloaderObject = new Downloader(this);
-    this->setWindowTitle(tr("Курс валют ЦБ РФ"));
+    currencyCode = "USD";
+    valueToRUR = "";
+//    date = (QDate().currentDate()).addDays(1);
+    date = QDate(2017, 2, 3);
+    nominal = "1";
+    currencyName = "";
 
-    QGroupBox * settingsGroup = new QGroupBox(tr("Настройки"));
 
-    currencyValueLabel = new QLabel();
-    xmlParserObject = new XmlCurrencyParser(this);
-    currencyNameLineEdit = new QLineEdit;
+
+    QGroupBox* settingsGroup = new QGroupBox(tr("Настройки"));
+
+    currencyCodeLineEdit = new QLineEdit(currencyCode);
+    currencyCodeLineEdit->setMaxLength(3);
+    currencyCodeLineEdit->setInputMask("AAA");
     currencyLabel = new QLabel(tr("код валюты:"));
-    valueLable = new QLabel(tr("курс к рублю:"));
     dateLable = new QLabel(tr("дата:"));
-    dateLineEdit = new QLineEdit;
+
+//    dateLineEdit = new QLineEdit("03.02.2017");
+//    dateLineEdit = new QLineEdit(date.toString("dd.MM.YYYY"));
+//    dateLineEdit->setInputMask("09.09.9999");
+
+
+    QGroupBox* resultGroup = new QGroupBox(tr("Результат запроса"));
+    nominalValueLable = new QLabel(nominal);
+    nominalLable = new QLabel(tr("номинал:"));
+    valueLable = new QLabel(tr("курс к рублю:"));
+    currencyValueLabel = new QLabel(valueToRUR);
+    nameLable = new QLabel(tr("название:"));
+    nameValueLable = new QLabel;
 
     QGroupBox* urlGroup = new QGroupBox(
-                tr("Адрес для получения котировок на заданный день"));
-    urlLineEdit = new QLineEdit;
+                tr("Адрес для получения котировок на день"));
     goButton = new QPushButton(tr("Скачать"));
-
-
-
+    QString strDownloadLink = "http://www.cbr.ru/scripts/XML_daily.asp";
+    urlLineEdit = new QLineEdit(strDownloadLink);
+    urlLineEdit->setReadOnly(true);
     downProgressBar  = new QProgressBar;
 
+    QFormLayout* settingsLayout = new QFormLayout;
+    settingsLayout->addRow(currencyLabel, currencyCodeLineEdit);
+//    settingsLayout->addRow(dateLable, dateLineEdit);
+//    settingsGroup->setLayout(settingsLayout);
+        setLayout(settingsLayout);
 
-    QGridLayout *settingsLayout = new QGridLayout;
-    settingsLayout->addWidget(currencyLabel, 0, 0);
-    settingsLayout->addWidget(currencyNameLineEdit, 0, 1);
-    settingsLayout->addWidget(currencyValueLabel,1 , 1);
-    settingsLayout->addWidget(valueLable, 1, 0);
-    settingsLayout->addWidget(dateLable, 2, 0);
-    settingsLayout->addWidget(dateLineEdit, 2, 1);
-    settingsGroup->setLayout(settingsLayout);
+//    QFormLayout* resultLayout = new QFormLayout;
+//    settingsLayout->addRow(nameLable, currencyValueLabel);
+//    settingsLayout->addRow(nominalLable, nameValueLable);
+//    settingsLayout->addRow(valueLable, currencyValueLabel);
+//    resultGroup->setLayout(resultLayout);
 
-    QGridLayout* urlLayout = new QGridLayout;
-    urlLayout->addWidget(urlLineEdit, 0, 0);
-    urlLayout->addWidget(goButton, 0, 1);
-    urlGroup->setLayout(urlLayout);
+//    QGridLayout* urlLayout = new QGridLayout;
+//    urlLayout->addWidget(urlLineEdit, 0, 0);
+//    urlLayout->addWidget(goButton, 0, 1);
+//    urlLayout->addWidget(downProgressBar, 1, 0, 1, 1);
+//    urlGroup->setLayout(urlLayout);
 
-    QGridLayout* pLayout = new QGridLayout;
-    pLayout->addWidget(settingsGroup, 0, 0);
-    pLayout->addWidget(urlGroup, 1, 0);
-    pLayout->addWidget(downProgressBar, 2, 0, 1, 1);
-    setLayout(pLayout);
+//    QVBoxLayout* pLayout = new QVBoxLayout;
+//    pLayout->addWidget(settingsGroup);
+//    pLayout->addWidget(urlGroup);
+//    pLayout->addWidget(resultGroup);
+//    setLayout(pLayout);
 
-    QString strDownloadLink =
-            "http://www.cbr.ru/scripts/XML_daily.asp";
-    urlLineEdit->setText(strDownloadLink);
-    currencyNameLineEdit->setText(tr("USD"));
-    currencyNameLineEdit->setMaxLength(3);
-    currencyNameLineEdit->setInputMask("AAA");
+//    QGridLayout* pLayout = new QGridLayout;
+//    pLayout->addWidget(settingsGroup, 0, 0);
+//    pLayout->addWidget(urlGroup, 1, 0);
+//    pLayout->addWidget(resultGroup, 2, 0);
+//    setLayout(pLayout);
+    setWindowTitle(tr("Курс валют ЦБ РФ"));
 
-    //TODO check first Date="01.07.1992"
-    dateLineEdit->setInputMask("00.00.0000");
-    dateLineEdit->setText("00000000");
-    dateLineEdit->setCursorPosition(0);
-    dateLineEdit->setReadOnly(true);
+    xmlParserObject = new XmlCurrencyParser(this);
+//        xmlParserObject = new XmlCurrencyParser(this, currencyCode);
+    downloaderObject = new Downloader(this);
 
-//Connectors----------------------------------------------------------
-    connect(goButton, SIGNAL(clicked()), SLOT(slotGo()));
+//Connectors-------------------------------------------------------------------
+
+    connect(goButton, SIGNAL(clicked()), this, SLOT(slotGo()));
     connect(downloaderObject, SIGNAL(downloadProgress(qint64, qint64)),
             this,  SLOT(slotDownloadProgress(qint64, qint64))
            );
     connect(downloaderObject, SIGNAL(done(const QUrl&, const QByteArray&)),
             this,  SLOT(slotDone(const QUrl&, const QByteArray&))
            );
-    connect(currencyNameLineEdit, &QLineEdit::textEdited,
+    connect(currencyCodeLineEdit, &QLineEdit::textEdited,
             xmlParserObject, &XmlCurrencyParser::setCurrencyName
             );
-    connect(currencyNameLineEdit, &QLineEdit::textChanged,
+    connect(currencyCodeLineEdit, &QLineEdit::textChanged,
             xmlParserObject, &XmlCurrencyParser::setCurrencyName
             );
     connect(this, &DownloaderGui::loadedXml,
-            xmlParserObject, &XmlCurrencyParser::getCurrecyValue
+            xmlParserObject, &XmlCurrencyParser::getCurrencyByCode
             );
     connect(xmlParserObject, &XmlCurrencyParser::currencyValueFound,
             currencyValueLabel, &QLabel::setText
@@ -128,21 +146,34 @@ DownloaderGui::DownloaderGui(QWidget* pwgt /*=0*/) : QWidget(pwgt)
     connect(xmlParserObject, &XmlCurrencyParser::dateFound,
             dateLineEdit, &QLineEdit::setText
             );
-
-    currencyValueLabel->setText(QLocale::system().decimalPoint());
+    //connect(this, &DownloaderGui::error, this, &DownloaderGui::slotError);
 }
 
 // ----------------------------------------------------------------------
 void DownloaderGui::slotGo()
 {
-    downloaderObject->download(QUrl(urlLineEdit->text()));
+    //TODO check first Date="01.07.1992"
+    QDate inputDate = QDate::fromString(dateLineEdit->text(),"dd.MM.YYYY");
+    if(inputDate.isValid()
+            && inputDate <= (QDate().currentDate()).addDays(1)
+            && inputDate >= QDate(1992, 7, 1))
+    {
+        date = inputDate;
+        urlLineEdit->setText(urlLineEdit->text() + "?date_req="
+                             + inputDate.toString("dd/MM/YYYY"));
+        downloaderObject->download(QUrl());
+    }
+    else
+    {
+        slotError(tr("Корректны только даты от 01.07.1992 до завтра."));
+    }
 }
 
 // ----------------------------------------------------------------------
 void DownloaderGui::slotDownloadProgress(qint64 nReceived, qint64 nTotal)
 {
     if (nTotal <= 0) {
-        slotError();
+        slotError(tr("An error while download is occured"));
         return;
     }
     downProgressBar->setValue(100 * nReceived / nTotal);
@@ -151,6 +182,7 @@ void DownloaderGui::slotDownloadProgress(qint64 nReceived, qint64 nTotal)
 // ----------------------------------------------------------------------
 void DownloaderGui::slotDone(const QUrl& url, const QByteArray& ba)
 {
+
     //TODO check for valid XML doc
     //TODO rewrite woth lambda
     emit loadedXml(ba);
