@@ -83,10 +83,10 @@ private:
     QLineEdit* urlLineEdit;
 
     QString currencyCode;
-    QString valueToRUR;
+//    QString valueToRUR;
     QDate date;
-    QString nominal;
-    QString currencyName;
+//    QString nominal;
+//    QString currencyName;
 
 public:
     DownloaderGui(QWidget* pwgt = 0);

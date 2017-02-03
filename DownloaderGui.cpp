@@ -50,13 +50,7 @@
 DownloaderGui::DownloaderGui(QWidget* pwgt /*=0*/) : QWidget(pwgt)
 {
     currencyCode = "USD";
-    valueToRUR = "";
     date = (QDate().currentDate()).addDays(1);
-//    date = QDate(2017, 2, 3);
-    nominal = "1";
-    currencyName = "";
-
-
 
     QGroupBox* settingsGroup = new QGroupBox(tr("Настройки"));
 
@@ -65,17 +59,15 @@ DownloaderGui::DownloaderGui(QWidget* pwgt /*=0*/) : QWidget(pwgt)
     currencyCodeLineEdit->setInputMask("AAA");
     currencyCodeLabel = new QLabel(tr("код валюты:"));
     dateLabel = new QLabel(tr("дата:"));
-
-//    dateLineEdit = new QLineEdit("03.02.2017");
     dateLineEdit = new QLineEdit(date.toString("dd.MM.yyyy"));
     dateLineEdit->setInputMask("09.09.9999");
 
 
     QGroupBox* resultGroup = new QGroupBox(tr("Результат запроса"));
-    nominalResultLabel = new QLabel(nominal);
+    nominalResultLabel = new QLabel("1");
     nominalLabel = new QLabel(tr("номинал:"));
     valueLabel = new QLabel(tr("курс к рублю:"));
-    valueResultLabel = new QLabel(valueToRUR);
+    valueResultLabel = new QLabel;
     nameLabel = new QLabel(tr("название:"));
     nameResultLabel = new QLabel;
 
@@ -91,7 +83,6 @@ DownloaderGui::DownloaderGui(QWidget* pwgt /*=0*/) : QWidget(pwgt)
     settingsLayout->addRow(currencyCodeLabel, currencyCodeLineEdit);
     settingsLayout->addRow(dateLabel, dateLineEdit);
     settingsGroup->setLayout(settingsLayout);
-//        setLayout(settingsLayout);
 
     QFormLayout* resultLayout = new QFormLayout;
     resultLayout->addRow(nameLabel, nameResultLabel);
@@ -111,15 +102,10 @@ DownloaderGui::DownloaderGui(QWidget* pwgt /*=0*/) : QWidget(pwgt)
     pLayout->addWidget(resultGroup);
     setLayout(pLayout);
 
-//    QGridLayout* pLayout = new QGridLayout;
-//    pLayout->addWidget(settingsGroup, 0, 0);
-//    pLayout->addWidget(urlGroup, 1, 0);
-//    pLayout->addWidget(resultGroup, 2, 0);
-//    setLayout(pLayout);
     setWindowTitle(tr("Курс валют ЦБ РФ"));
 
-    xmlParserObject = new XmlCurrencyParser(this);
-//        xmlParserObject = new XmlCurrencyParser(this, currencyCode);
+//    xmlParserObject = new XmlCurrencyParser(this);
+    xmlParserObject = new XmlCurrencyParser(this, currencyCode);
     downloaderObject = new Downloader(this);
 
 //Connectors-------------------------------------------------------------------
@@ -149,13 +135,11 @@ DownloaderGui::DownloaderGui(QWidget* pwgt /*=0*/) : QWidget(pwgt)
     connect(xmlParserObject, &XmlCurrencyParser::parseSucces,
             this, &DownloaderGui::slotParseSucces
             );
-    //connect(this, &DownloaderGui::error, this, &DownloaderGui::slotError);
 }
 
 // ----------------------------------------------------------------------
 void DownloaderGui::slotGo()
 {
-    //TODO check first Date="01.07.1992"
     QDate inputDate = QDate::fromString(dateLineEdit->text(),"dd.MM.yyyy");
     if(!inputDate.isValid()
             || inputDate > (QDate().currentDate()).addDays(2)
@@ -164,12 +148,14 @@ void DownloaderGui::slotGo()
         slotError(tr("Корректны только даты от 01.07.1992 до завтра."));
         return;
     }
+
     QUrl *urlUserInput = new QUrl(urlLineEdit->text());
     if(!(urlUserInput->isValid()))
     {
         slotError(tr("Url некорректный! Исправьте, пожалуйста."));
         return;
     }
+
     if(date != inputDate)
     {
         date = inputDate;
@@ -181,6 +167,7 @@ void DownloaderGui::slotGo()
         urlUserInput->setQuery(*dateUrlQuery);
         urlLineEdit->setText(urlUserInput->toString());
     }
+
     downloaderObject->download(*urlUserInput);
 
 }
@@ -198,11 +185,8 @@ void DownloaderGui::slotDownloadProgress(qint64 nReceived, qint64 nTotal)
 // ----------------------------------------------------------------------
 void DownloaderGui::slotDone(const QUrl& url, const QByteArray& ba)
 {
-
-    //TODO check for valid XML doc
-    //TODO rewrite woth lambda
+    //TODO rewrite with lambda
     emit loadedXml(ba);
-//    m_pxcp->getCurrecyValue(ba);
     //    QString strFileName = url.path().section('/', -1);
 }
 

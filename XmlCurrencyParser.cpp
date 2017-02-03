@@ -51,43 +51,25 @@ void XmlCurrencyParser::traverseNode(const QDomNode& node)
                 {
                     isCurrencyCodeFound = true;
                     stopParse = true;
-                    qDebug() << "TagName: " << domElement.tagName()
-                             << "\tText: " << domElement.text();
                     //In example next sublings are Nominal, Name, Value
 
                     domNode = domNode.nextSibling();
                     domElement = domNode.toElement();
-                    qDebug() << "TagName: " << domElement.tagName()
-                             << "\tText: " << domElement.text();
                     if(domElement.tagName()=="Nominal")
                         nominal = domElement.text();
 
                     domNode = domNode.nextSibling();
                     domElement = domNode.toElement();
-                    qDebug() << "TagName: " << domElement.tagName()
-                             << "\tText: " << domElement.text();
                     if(domElement.tagName()=="Name")
                         name = domElement.text();
 
                     domNode = domNode.nextSibling();
                     domElement = domNode.toElement();
-                    qDebug() << "TagName: " << domElement.tagName()
-                             << "\tText: " << domElement.text();
                     if(domElement.tagName()=="Value")
                         valueToRUR = domElement.text();
 
                     emit parseSucces(valueToRUR, nominal, name);
                 }
-
-//                else if(isCurrencyCodeFound && domElement.tagName()=="Value")
-//                {
-//                    stopParse = true;
-//                    qDebug() << "TagName: " << domElement.tagName()
-//                             << "\tText: " << domElement.text();
-//                    valueToRUR = (QLocale::system().toDouble(domElement.text()));
-//                    emit currencyValueFound(domElement.text());
-//                    return;
-//                }
              }
         }
         traverseNode(domNode);
@@ -101,8 +83,8 @@ void XmlCurrencyParser::getCurrencyByCode(const QByteArray & data)
     QDomDocument domDoc;
     bool namespaceProcessing = false;
     QString* errorMsg = new QString("");
-    int * errorLine = 0;
-    int * errorColumn = 0;
+    int * errorLine = new int;
+    int * errorColumn = new int;
     if(domDoc.setContent(data,
                          namespaceProcessing,
                          errorMsg,
@@ -115,9 +97,6 @@ void XmlCurrencyParser::getCurrencyByCode(const QByteArray & data)
             //Date check is obsolete. Commented it just in case.
 //            if(domElement.tagName()=="ValCurs")
 //            {
-//                //<ValCurs Date="01.07.1992" name="Foreign Currency Market">
-//                qDebug() << "TagName: " << domElement.tagName() << "Attr: "
-//                         << domElement.attribute("Date", "");
 //                date = domElement.attribute("Date","");
 //                emit dateFound(date);
 //            }
@@ -130,32 +109,29 @@ void XmlCurrencyParser::getCurrencyByCode(const QByteArray & data)
     }
     else
     {
-        //If a parse error occurs, this function returns false and the error
-//        message is placed in *errorMsg, the line number in *errorLine and the
-//        column number in *errorColumn (unless the associated pointer is set to
-//        0); otherwise this function returns true.
         emit error(*errorMsg + "in the line number " + *errorLine +
                    " in the column number " + *errorColumn);
     }
 }
 
 
-//// ----------------------------------------------------------------------
-//XmlCurrencyParser::XmlCurrencyParser(QObject* pobj/*=0*/, const QString& curCode)
-//    : QObject(pobj), currencyCode(curCode)
-//{
-//    isCurrencyCodeFound = false;
-//    stopParse = false;
-//    valueToRUR = 0.0;
-//    currencyCode = curCode;
-//}
-
 // ----------------------------------------------------------------------
-XmlCurrencyParser::XmlCurrencyParser(QObject* pobj/*=0*/)
-    : QObject(pobj)
+XmlCurrencyParser::XmlCurrencyParser(QObject* pobj,
+                                     const QString& curCode)
+    : QObject(pobj), currencyCode(curCode)
 {
     isCurrencyCodeFound = false;
     stopParse = false;
-    currencyCode = "USD";
+    valueToRUR = 0.0;
+    currencyCode = curCode;
 }
+
+//// ----------------------------------------------------------------------
+//XmlCurrencyParser::XmlCurrencyParser(QObject* pobj/*=0*/)
+//    : QObject(pobj)
+//{
+//    isCurrencyCodeFound = false;
+//    stopParse = false;
+//    currencyCode = "USD";
+//}
 

@@ -48,8 +48,8 @@ private:
     QString name;
     bool isCurrencyCodeFound, stopParse;
 public:
-//        XmlCurrencyParser(QObject* pobj = 0, const QString& curCode = QString("USD"));
-    XmlCurrencyParser(QObject* pobj = 0);
+    XmlCurrencyParser(QObject* pobj = 0, const QString& curCode = QString("USD"));
+//    XmlCurrencyParser(QObject* pobj = 0);
 
 signals:
     void currencyValueFound(const QString&);
