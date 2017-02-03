@@ -154,22 +154,32 @@ void DownloaderGui::slotGo()
 {
     //TODO check first Date="01.07.1992"
     QDate inputDate = QDate::fromString(dateLineEdit->text(),"dd.MM.yyyy");
-    if(inputDate.isValid()
-            && inputDate <= (QDate().currentDate()).addDays(1)
-            && inputDate >= QDate(1992, 7, 1))
-    {
-        if(date != inputDate)
-        {
-            date = inputDate;
-            urlLineEdit->setText(urlLineEdit->text() + "?date_req="
-                                 + inputDate.toString("dd/MM/yyyy"));
-        }
-        downloaderObject->download(QUrl(urlLineEdit->text()));
-    }
-    else
+    if(!inputDate.isValid()
+            || inputDate > (QDate().currentDate()).addDays(2)
+            || inputDate < QDate(1992, 7, 1))
     {
         slotError(tr("Корректны только даты от 01.07.1992 до завтра."));
+        return;
     }
+    QUrl *urlUserInput = new QUrl(urlLineEdit->text());
+    if(!(urlUserInput->isValid()))
+    {
+        slotError(tr("Url некорректный! Исправьте, пожалуйста."));
+        return;
+    }
+    if(date != inputDate)
+    {
+        date = inputDate;
+        QUrlQuery *dateUrlQuery = new QUrlQuery(urlUserInput->query());
+        //Insert new date to QUrlQuery
+        if(dateUrlQuery->hasQueryItem("date_req"))
+            dateUrlQuery->removeQueryItem("date_req");
+        dateUrlQuery->addQueryItem("date_req", inputDate.toString("dd/MM/yyyy"));
+        urlUserInput->setQuery(*dateUrlQuery);
+        urlLineEdit->setText(urlUserInput->toString());
+    }
+    downloaderObject->download(*urlUserInput);
+
 }
 
 // ----------------------------------------------------------------------
