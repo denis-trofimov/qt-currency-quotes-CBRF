@@ -43,9 +43,9 @@ private:
 //public:
     QString currencyCode;
     QString valueToRUR;
-    QString date;
+//    QString date;
     QString nominal;
-    QString currencyName;
+    QString name;
     bool isCurrencyCodeFound, stopParse;
 public:
 //        XmlCurrencyParser(QObject* pobj = 0, const QString& curCode = QString("USD"));
@@ -55,6 +55,9 @@ signals:
     void currencyValueFound(const QString&);
 //    void dateFound(const QString&);
     void error(const QString&);
+    void parseSucces(const QString& valueParsed,
+                         const QString& nominalParsed,
+                         const QString& nameParsed);
 
 public slots:
     void setCurrencyName(const QString&);

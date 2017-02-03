@@ -67,16 +67,19 @@ private:
     QProgressBar* downProgressBar;
     QPushButton*  goButton;
 
-    QLabel* currencyValueLabel;
-    QLabel* currencyLabel;
-    QLabel* valueLable;
-    QLabel* dateLable;
-    QLabel* nominalLable;
-    QLabel* nominalValueLable;
-    QLabel* nameValueLable;
-    QLabel* nameLable;
+
+    QLabel* currencyCodeLabel;
     QLineEdit* currencyCodeLineEdit;
+    QLabel* dateLabel;
     QLineEdit* dateLineEdit;
+
+    QLabel* valueLabel;
+    QLabel* valueResultLabel;
+    QLabel* nominalLabel;
+    QLabel* nominalResultLabel;
+    QLabel* nameResultLabel;
+    QLabel* nameLabel;
+
     QLineEdit* urlLineEdit;
 
     QString currencyCode;
@@ -97,5 +100,8 @@ private slots:
     void slotDone            (const QUrl&, const QByteArray&);
     void slotError           (const QString&                );
     void slotError           (               );
+    void slotParseSucces(const QString& valueParsed,
+                         const QString& nominalParsed,
+                         const QString& nameParsed);
 };
 

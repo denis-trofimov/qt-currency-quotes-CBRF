@@ -21,6 +21,14 @@
  *
  */
 
+//<Valute ID="R01235">
+//    <NumCode>840</NumCode>
+//    <CharCode>USD</CharCode>
+//    <Nominal>1</Nominal>
+//    <Name>Доллар США</Name>
+//    <Value>30,9436</Value>
+//</Valute>
+
 #include "XmlCurrencyParser.h"
 
 void XmlCurrencyParser::setCurrencyName(const QString& name)
@@ -42,19 +50,44 @@ void XmlCurrencyParser::traverseNode(const QDomNode& node)
                         domElement.text()==currencyCode)
                 {
                     isCurrencyCodeFound = true;
-                    qDebug() << "TagName: " << domElement.tagName()
-                             << "\tText: " << domElement.text();
-                }
-
-                else if(isCurrencyCodeFound && domElement.tagName()=="Value")
-                {
                     stopParse = true;
                     qDebug() << "TagName: " << domElement.tagName()
                              << "\tText: " << domElement.text();
-                    valueToRUR = (QLocale::system().toDouble(domElement.text()));
-                    emit currencyValueFound(domElement.text());
-                    return;
+                    //In example next sublings are Nominal, Name, Value
+
+                    domNode = domNode.nextSibling();
+                    domElement = domNode.toElement();
+                    qDebug() << "TagName: " << domElement.tagName()
+                             << "\tText: " << domElement.text();
+                    if(domElement.tagName()=="Nominal")
+                        nominal = domElement.text();
+
+                    domNode = domNode.nextSibling();
+                    domElement = domNode.toElement();
+                    qDebug() << "TagName: " << domElement.tagName()
+                             << "\tText: " << domElement.text();
+                    if(domElement.tagName()=="Name")
+                        name = domElement.text();
+
+                    domNode = domNode.nextSibling();
+                    domElement = domNode.toElement();
+                    qDebug() << "TagName: " << domElement.tagName()
+                             << "\tText: " << domElement.text();
+                    if(domElement.tagName()=="Value")
+                        valueToRUR = domElement.text();
+
+                    emit parseSucces(valueToRUR, nominal, name);
                 }
+
+//                else if(isCurrencyCodeFound && domElement.tagName()=="Value")
+//                {
+//                    stopParse = true;
+//                    qDebug() << "TagName: " << domElement.tagName()
+//                             << "\tText: " << domElement.text();
+//                    valueToRUR = (QLocale::system().toDouble(domElement.text()));
+//                    emit currencyValueFound(domElement.text());
+//                    return;
+//                }
              }
         }
         traverseNode(domNode);

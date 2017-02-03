@@ -63,8 +63,8 @@ DownloaderGui::DownloaderGui(QWidget* pwgt /*=0*/) : QWidget(pwgt)
     currencyCodeLineEdit = new QLineEdit(currencyCode);
     currencyCodeLineEdit->setMaxLength(3);
     currencyCodeLineEdit->setInputMask("AAA");
-    currencyLabel = new QLabel(tr("код валюты:"));
-    dateLable = new QLabel(tr("дата:"));
+    currencyCodeLabel = new QLabel(tr("код валюты:"));
+    dateLabel = new QLabel(tr("дата:"));
 
 //    dateLineEdit = new QLineEdit("03.02.2017");
     dateLineEdit = new QLineEdit(date.toString("dd.MM.yyyy"));
@@ -72,12 +72,12 @@ DownloaderGui::DownloaderGui(QWidget* pwgt /*=0*/) : QWidget(pwgt)
 
 
     QGroupBox* resultGroup = new QGroupBox(tr("Результат запроса"));
-    nominalValueLable = new QLabel(nominal);
-    nominalLable = new QLabel(tr("номинал:"));
-    valueLable = new QLabel(tr("курс к рублю:"));
-    currencyValueLabel = new QLabel(valueToRUR);
-    nameLable = new QLabel(tr("название:"));
-    nameValueLable = new QLabel;
+    nominalResultLabel = new QLabel(nominal);
+    nominalLabel = new QLabel(tr("номинал:"));
+    valueLabel = new QLabel(tr("курс к рублю:"));
+    valueResultLabel = new QLabel(valueToRUR);
+    nameLabel = new QLabel(tr("название:"));
+    nameResultLabel = new QLabel;
 
     QGroupBox* urlGroup = new QGroupBox(
                 tr("Адрес для получения котировок на день"));
@@ -88,15 +88,15 @@ DownloaderGui::DownloaderGui(QWidget* pwgt /*=0*/) : QWidget(pwgt)
     downProgressBar  = new QProgressBar;
 
     QFormLayout* settingsLayout = new QFormLayout;
-    settingsLayout->addRow(currencyLabel, currencyCodeLineEdit);
-    settingsLayout->addRow(dateLable, dateLineEdit);
+    settingsLayout->addRow(currencyCodeLabel, currencyCodeLineEdit);
+    settingsLayout->addRow(dateLabel, dateLineEdit);
     settingsGroup->setLayout(settingsLayout);
 //        setLayout(settingsLayout);
 
     QFormLayout* resultLayout = new QFormLayout;
-    resultLayout->addRow(nameLable, currencyValueLabel);
-    resultLayout->addRow(nominalLable, nameValueLable);
-    resultLayout->addRow(valueLable, currencyValueLabel);
+    resultLayout->addRow(nameLabel, nameResultLabel);
+    resultLayout->addRow(nominalLabel, nominalResultLabel);
+    resultLayout->addRow(valueLabel, valueResultLabel);
     resultGroup->setLayout(resultLayout);
 
     QGridLayout* urlLayout = new QGridLayout;
@@ -141,11 +141,14 @@ DownloaderGui::DownloaderGui(QWidget* pwgt /*=0*/) : QWidget(pwgt)
             xmlParserObject, &XmlCurrencyParser::getCurrencyByCode
             );
     connect(xmlParserObject, &XmlCurrencyParser::currencyValueFound,
-            currencyValueLabel, &QLabel::setText
+            valueResultLabel, &QLabel::setText
             );
 //    connect(xmlParserObject, &XmlCurrencyParser::dateFound,
 //            dateLineEdit, &QLineEdit::setText
 //            );
+    connect(xmlParserObject, &XmlCurrencyParser::parseSucces,
+            this, &DownloaderGui::slotParseSucces
+            );
     //connect(this, &DownloaderGui::error, this, &DownloaderGui::slotError);
 }
 
@@ -220,4 +223,14 @@ void DownloaderGui::slotError(const QString& errorMessage =
                           tr("Error"),
                           errorMessage
                          );
+}
+
+// ----------------------------------------------------------------------
+void DownloaderGui::slotParseSucces(const QString& valueParsed,
+                                    const QString& nominalParsed,
+                                    const QString& nameParsed)
+{
+    valueResultLabel->setText(valueParsed);
+    nominalResultLabel->setText(nominalParsed);
+    nameResultLabel->setText(nameParsed);
 }
