@@ -39,10 +39,6 @@ void XmlCurrencyParser::setCurrencyName(const QString& name)
 // ----------------------------------------------------------------------
 void XmlCurrencyParser::traverseNode(const QDomNode& node)
 {
-//    if(stopParse)
-//    {
-//        //To stop parse Constructs a null node, stops while loop
-//        return;
     QDomNode domNode = node.firstChild();
     while(!domNode.isNull()) {
         if(domNode.isElement()) {
@@ -51,8 +47,6 @@ void XmlCurrencyParser::traverseNode(const QDomNode& node)
                 if(domElement.tagName()=="CharCode" &&
                         domElement.text()==currencyCode)
                 {
-//                    isCurrencyCodeFound = true;
-//                    stopParse = true;
                     //In example next sublings are Nominal, Name, Value
 
                     domElement = domNode.nextSiblingElement("Nominal");
@@ -136,10 +130,6 @@ void XmlCurrencyParser::getCurrencyByCode(const QByteArray & data)
 //            }
         }
         traverseNode(domElement);
-        //To enable restart
-//        isCurrencyCodeFound = false;
-        stopParse = false;
-
     }
     else
     {
@@ -148,24 +138,10 @@ void XmlCurrencyParser::getCurrencyByCode(const QByteArray & data)
     }
 }
 
-
 // ----------------------------------------------------------------------
 XmlCurrencyParser::XmlCurrencyParser(QObject* pobj,
                                      const QString& curCode)
     : QObject(pobj), currencyCode(curCode)
 {
-//    isCurrencyCodeFound = false;
-    stopParse = false;
-//    valueToRUR = 0.0;
     currencyCode = curCode;
 }
-
-//// ----------------------------------------------------------------------
-//XmlCurrencyParser::XmlCurrencyParser(QObject* pobj/*=0*/)
-//    : QObject(pobj)
-//{
-//    isCurrencyCodeFound = false;
-//    stopParse = false;
-//    currencyCode = "USD";
-//}
-

@@ -39,22 +39,16 @@ Q_OBJECT
 
 private:
     void traverseNode(const QDomNode&);
-
-//public:
     QString currencyCode;
     QString valueToRUR;
-//    QString date;
     QString nominal;
     QString name;
-    bool isCurrencyCodeFound, stopParse;
     QString* errorMsg;
+
 public:
     XmlCurrencyParser(QObject* pobj = 0, const QString& curCode = QString("USD"));
-//    XmlCurrencyParser(QObject* pobj = 0);
 
 signals:
-    void currencyValueFound(const QString&);
-//    void dateFound(const QString&);
     void error(const QString&);
     void parseSucces(const QString& valueParsed,
                          const QString& nominalParsed,

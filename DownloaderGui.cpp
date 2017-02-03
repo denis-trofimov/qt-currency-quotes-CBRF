@@ -126,12 +126,6 @@ DownloaderGui::DownloaderGui(QWidget* pwgt /*=0*/) : QWidget(pwgt)
     connect(this, &DownloaderGui::loadedXml,
             xmlParserObject, &XmlCurrencyParser::getCurrencyByCode
             );
-    connect(xmlParserObject, &XmlCurrencyParser::currencyValueFound,
-            valueResultLabel, &QLabel::setText
-            );
-//    connect(xmlParserObject, &XmlCurrencyParser::dateFound,
-//            dateLineEdit, &QLineEdit::setText
-//            );
     connect(xmlParserObject, &XmlCurrencyParser::parseSucces,
             this, &DownloaderGui::slotParseSucces
             );
@@ -145,14 +139,17 @@ void DownloaderGui::slotGo()
             || inputDate > (QDate().currentDate()).addDays(2)
             || inputDate < QDate(1992, 7, 1))
     {
-        slotError(tr("Корректны только даты от 01.07.1992 до завтра."));
+        slotError(tr("Введена некорректная дата.\n"
+                     "Диапазон дат от 01.07.1992 до завтрашней даты.\n"
+                     "Исправьте, пожалуйста."));
         return;
     }
 
     QUrl *urlUserInput = new QUrl(urlLineEdit->text());
     if(!(urlUserInput->isValid()))
     {
-        slotError(tr("Url некорректный! Исправьте, пожалуйста."));
+        slotError(tr("Введен некорректный адрес сайта!\n"
+                     "Исправьте, пожалуйста."));
         return;
     }
 
