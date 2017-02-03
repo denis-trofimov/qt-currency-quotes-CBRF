@@ -143,9 +143,9 @@ DownloaderGui::DownloaderGui(QWidget* pwgt /*=0*/) : QWidget(pwgt)
     connect(xmlParserObject, &XmlCurrencyParser::currencyValueFound,
             currencyValueLabel, &QLabel::setText
             );
-    connect(xmlParserObject, &XmlCurrencyParser::dateFound,
-            dateLineEdit, &QLineEdit::setText
-            );
+//    connect(xmlParserObject, &XmlCurrencyParser::dateFound,
+//            dateLineEdit, &QLineEdit::setText
+//            );
     //connect(this, &DownloaderGui::error, this, &DownloaderGui::slotError);
 }
 

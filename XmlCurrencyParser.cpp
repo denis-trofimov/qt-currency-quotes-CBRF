@@ -79,14 +79,15 @@ void XmlCurrencyParser::getCurrencyByCode(const QByteArray & data)
     {
         QDomElement domElement= domDoc.documentElement();
         if(!domElement.isNull()) {
-            if(domElement.tagName()=="ValCurs")
-            {
-                //<ValCurs Date="01.07.1992" name="Foreign Currency Market">
-                qDebug() << "TagName: " << domElement.tagName() << "Attr: "
-                         << domElement.attribute("Date", "");
-                date = domElement.attribute("Date","");
-                emit dateFound(date);
-            }
+            //Date check is obsolete. Commented it just in case.
+//            if(domElement.tagName()=="ValCurs")
+//            {
+//                //<ValCurs Date="01.07.1992" name="Foreign Currency Market">
+//                qDebug() << "TagName: " << domElement.tagName() << "Attr: "
+//                         << domElement.attribute("Date", "");
+//                date = domElement.attribute("Date","");
+//                emit dateFound(date);
+//            }
         }
         traverseNode(domElement);
         //To enable restart

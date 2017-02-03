@@ -53,7 +53,7 @@ public:
 
 signals:
     void currencyValueFound(const QString&);
-    void dateFound(const QString&);
+//    void dateFound(const QString&);
     void error(const QString&);
 
 public slots:
