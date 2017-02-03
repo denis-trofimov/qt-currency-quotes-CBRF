@@ -51,8 +51,8 @@ DownloaderGui::DownloaderGui(QWidget* pwgt /*=0*/) : QWidget(pwgt)
 {
     currencyCode = "USD";
     valueToRUR = "";
-//    date = (QDate().currentDate()).addDays(1);
-    date = QDate(2017, 2, 3);
+    date = (QDate().currentDate()).addDays(1);
+//    date = QDate(2017, 2, 3);
     nominal = "1";
     currencyName = "";
 
@@ -84,7 +84,7 @@ DownloaderGui::DownloaderGui(QWidget* pwgt /*=0*/) : QWidget(pwgt)
     goButton = new QPushButton(tr("Скачать"));
     QString strDownloadLink = "http://www.cbr.ru/scripts/XML_daily.asp";
     urlLineEdit = new QLineEdit(strDownloadLink);
-    urlLineEdit->setReadOnly(true);
+//    urlLineEdit->setReadOnly(true);
     downProgressBar  = new QProgressBar;
 
     QFormLayout* settingsLayout = new QFormLayout;
@@ -158,10 +158,13 @@ void DownloaderGui::slotGo()
             && inputDate <= (QDate().currentDate()).addDays(1)
             && inputDate >= QDate(1992, 7, 1))
     {
-        date = inputDate;
-        urlLineEdit->setText(urlLineEdit->text() + "?date_req="
-                             + inputDate.toString("dd/MM/yyyy"));
-        downloaderObject->download(QUrl());
+        if(date != inputDate)
+        {
+            date = inputDate;
+            urlLineEdit->setText(urlLineEdit->text() + "?date_req="
+                                 + inputDate.toString("dd/MM/yyyy"));
+        }
+        downloaderObject->download(QUrl(urlLineEdit->text()));
     }
     else
     {
