@@ -39,8 +39,10 @@ void XmlCurrencyParser::setCurrencyName(const QString& name)
 // ----------------------------------------------------------------------
 void XmlCurrencyParser::traverseNode(const QDomNode& node)
 {
-    if(stopParse)
-        return;
+//    if(stopParse)
+//    {
+//        //To stop parse Constructs a null node, stops while loop
+//        return;
     QDomNode domNode = node.firstChild();
     while(!domNode.isNull()) {
         if(domNode.isElement()) {
@@ -49,31 +51,63 @@ void XmlCurrencyParser::traverseNode(const QDomNode& node)
                 if(domElement.tagName()=="CharCode" &&
                         domElement.text()==currencyCode)
                 {
-                    isCurrencyCodeFound = true;
-                    stopParse = true;
+//                    isCurrencyCodeFound = true;
+//                    stopParse = true;
                     //In example next sublings are Nominal, Name, Value
 
-                    domNode = domNode.nextSibling();
-                    domElement = domNode.toElement();
-                    if(domElement.tagName()=="Nominal")
+                    domElement = domNode.nextSiblingElement("Nominal");
+                    if(!domElement.isNull())
                         nominal = domElement.text();
+                    else
+                    {
+                        domElement = domNode.previousSiblingElement("Nominal");
+                        if(!domElement.isNull())
+                            nominal = domElement.text();
+                        else
+                            *errorMsg += tr("Тэг <Nominal> не найден в XML"
+                                            "документе.\n");
+                    }
 
-                    domNode = domNode.nextSibling();
-                    domElement = domNode.toElement();
-                    if(domElement.tagName()=="Name")
+                    domElement = domNode.nextSiblingElement("Name");
+                    if(!domElement.isNull())
                         name = domElement.text();
+                    else
+                    {
+                        domElement = domNode.previousSiblingElement("Name");
+                        if(!domElement.isNull())
+                            name = domElement.text();
+                        else
+                            *errorMsg += tr("Тэг <Name> не найден в XML"
+                                            "документе.\n");
+                    }
 
-                    domNode = domNode.nextSibling();
-                    domElement = domNode.toElement();
-                    if(domElement.tagName()=="Value")
+                    domElement = domNode.nextSiblingElement("Value");
+                    if(!domElement.isNull())
                         valueToRUR = domElement.text();
+                    else
+                    {
+                        domElement = domNode.previousSiblingElement("Value");
+                        if(!domElement.isNull())
+                            valueToRUR = domElement.text();
+                        else
+                            *errorMsg += tr("Тэг <Value> не найден в XML"
+                                            "документе.\n");
+                    }
 
-                    emit parseSucces(valueToRUR, nominal, name);
+                    if(errorMsg->isEmpty())
+                        emit parseSucces(valueToRUR, nominal, name);
+                    else
+                        emit error(*errorMsg);
+
+                    //To stop parse constructs a null node, stops while loop
+                    domNode = QDomNode();
+                    continue;
                 }
              }
         }
         traverseNode(domNode);
-        domNode = domNode.nextSibling();
+        if(!domNode.isNull())
+            domNode = domNode.nextSibling();
     }
 }
 
@@ -82,7 +116,7 @@ void XmlCurrencyParser::getCurrencyByCode(const QByteArray & data)
 {
     QDomDocument domDoc;
     bool namespaceProcessing = false;
-    QString* errorMsg = new QString("");
+    errorMsg = new QString("");
     int * errorLine = new int;
     int * errorColumn = new int;
     if(domDoc.setContent(data,
@@ -103,7 +137,7 @@ void XmlCurrencyParser::getCurrencyByCode(const QByteArray & data)
         }
         traverseNode(domElement);
         //To enable restart
-        isCurrencyCodeFound = false;
+//        isCurrencyCodeFound = false;
         stopParse = false;
 
     }
@@ -120,9 +154,9 @@ XmlCurrencyParser::XmlCurrencyParser(QObject* pobj,
                                      const QString& curCode)
     : QObject(pobj), currencyCode(curCode)
 {
-    isCurrencyCodeFound = false;
+//    isCurrencyCodeFound = false;
     stopParse = false;
-    valueToRUR = 0.0;
+//    valueToRUR = 0.0;
     currencyCode = curCode;
 }
 

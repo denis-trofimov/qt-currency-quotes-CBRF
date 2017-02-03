@@ -47,6 +47,7 @@ private:
     QString nominal;
     QString name;
     bool isCurrencyCodeFound, stopParse;
+    QString* errorMsg;
 public:
     XmlCurrencyParser(QObject* pobj = 0, const QString& curCode = QString("USD"));
 //    XmlCurrencyParser(QObject* pobj = 0);
