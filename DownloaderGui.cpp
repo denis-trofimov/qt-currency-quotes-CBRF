@@ -67,8 +67,8 @@ DownloaderGui::DownloaderGui(QWidget* pwgt /*=0*/) : QWidget(pwgt)
     dateLable = new QLabel(tr("дата:"));
 
 //    dateLineEdit = new QLineEdit("03.02.2017");
-//    dateLineEdit = new QLineEdit(date.toString("dd.MM.YYYY"));
-//    dateLineEdit->setInputMask("09.09.9999");
+    dateLineEdit = new QLineEdit(date.toString("dd.MM.yyyy"));
+    dateLineEdit->setInputMask("09.09.9999");
 
 
     QGroupBox* resultGroup = new QGroupBox(tr("Результат запроса"));
@@ -89,27 +89,27 @@ DownloaderGui::DownloaderGui(QWidget* pwgt /*=0*/) : QWidget(pwgt)
 
     QFormLayout* settingsLayout = new QFormLayout;
     settingsLayout->addRow(currencyLabel, currencyCodeLineEdit);
-//    settingsLayout->addRow(dateLable, dateLineEdit);
-//    settingsGroup->setLayout(settingsLayout);
-        setLayout(settingsLayout);
+    settingsLayout->addRow(dateLable, dateLineEdit);
+    settingsGroup->setLayout(settingsLayout);
+//        setLayout(settingsLayout);
 
-//    QFormLayout* resultLayout = new QFormLayout;
-//    settingsLayout->addRow(nameLable, currencyValueLabel);
-//    settingsLayout->addRow(nominalLable, nameValueLable);
-//    settingsLayout->addRow(valueLable, currencyValueLabel);
-//    resultGroup->setLayout(resultLayout);
+    QFormLayout* resultLayout = new QFormLayout;
+    resultLayout->addRow(nameLable, currencyValueLabel);
+    resultLayout->addRow(nominalLable, nameValueLable);
+    resultLayout->addRow(valueLable, currencyValueLabel);
+    resultGroup->setLayout(resultLayout);
 
-//    QGridLayout* urlLayout = new QGridLayout;
-//    urlLayout->addWidget(urlLineEdit, 0, 0);
-//    urlLayout->addWidget(goButton, 0, 1);
-//    urlLayout->addWidget(downProgressBar, 1, 0, 1, 1);
-//    urlGroup->setLayout(urlLayout);
+    QGridLayout* urlLayout = new QGridLayout;
+    urlLayout->addWidget(urlLineEdit, 0, 0);
+    urlLayout->addWidget(goButton, 0, 1);
+    urlLayout->addWidget(downProgressBar, 1, 0, 1, 1);
+    urlGroup->setLayout(urlLayout);
 
-//    QVBoxLayout* pLayout = new QVBoxLayout;
-//    pLayout->addWidget(settingsGroup);
-//    pLayout->addWidget(urlGroup);
-//    pLayout->addWidget(resultGroup);
-//    setLayout(pLayout);
+    QVBoxLayout* pLayout = new QVBoxLayout;
+    pLayout->addWidget(settingsGroup);
+    pLayout->addWidget(urlGroup);
+    pLayout->addWidget(resultGroup);
+    setLayout(pLayout);
 
 //    QGridLayout* pLayout = new QGridLayout;
 //    pLayout->addWidget(settingsGroup, 0, 0);
@@ -153,14 +153,14 @@ DownloaderGui::DownloaderGui(QWidget* pwgt /*=0*/) : QWidget(pwgt)
 void DownloaderGui::slotGo()
 {
     //TODO check first Date="01.07.1992"
-    QDate inputDate = QDate::fromString(dateLineEdit->text(),"dd.MM.YYYY");
+    QDate inputDate = QDate::fromString(dateLineEdit->text(),"dd.MM.yyyy");
     if(inputDate.isValid()
             && inputDate <= (QDate().currentDate()).addDays(1)
             && inputDate >= QDate(1992, 7, 1))
     {
         date = inputDate;
         urlLineEdit->setText(urlLineEdit->text() + "?date_req="
-                             + inputDate.toString("dd/MM/YYYY"));
+                             + inputDate.toString("dd/MM/yyyy"));
         downloaderObject->download(QUrl());
     }
     else
