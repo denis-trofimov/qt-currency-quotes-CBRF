@@ -11,7 +11,7 @@
 
 class QXmlStreamReader;
 
-class XmlCurrencyParser : public QObject {
+class XmlParser : public QObject {
 Q_OBJECT
 
 private:
@@ -23,7 +23,7 @@ private:
     QString* errorMsg;
 
 public:
-    XmlCurrencyParser(QObject* pobj = 0, const QString& curCode = QString("USD"));
+    XmlParser(QObject* pobj = 0, const QString& curCode = QString("USD"));
 
 signals:
     void error(const QString&);

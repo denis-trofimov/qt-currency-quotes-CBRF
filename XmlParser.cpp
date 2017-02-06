@@ -6,15 +6,15 @@
 //    <Value>30,9436</Value>
 //</Valute>
 
-#include "XmlCurrencyParser.h"
+#include "XmlParser.h"
 
-void XmlCurrencyParser::setCurrencyName(const QString& name)
+void XmlParser::setCurrencyName(const QString& name)
 {
     currencyCode = name;
 }
 
 // ----------------------------------------------------------------------
-void XmlCurrencyParser::traverseNode(const QDomNode& node)
+void XmlParser::traverseNode(const QDomNode& node)
 {
     QDomNode domNode = node.firstChild();
     while(!domNode.isNull()) {
@@ -83,7 +83,7 @@ void XmlCurrencyParser::traverseNode(const QDomNode& node)
 }
 
 // ----------------------------------------------------------------------
-void XmlCurrencyParser::getCurrencyByCode(const QByteArray & data)
+void XmlParser::getCurrencyByCode(const QByteArray & data)
 {
     QDomDocument domDoc;
     bool namespaceProcessing = false;
@@ -116,7 +116,7 @@ void XmlCurrencyParser::getCurrencyByCode(const QByteArray & data)
 }
 
 // ----------------------------------------------------------------------
-XmlCurrencyParser::XmlCurrencyParser(QObject* pobj,
+XmlParser::XmlParser(QObject* pobj,
                                      const QString& curCode)
     : QObject(pobj), currencyCode(curCode)
 {

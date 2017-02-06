@@ -1,5 +1,5 @@
 #include <QApplication>
-#include "DownloaderGui.h"
+#include "Gui.h"
 
 // ----------------------------------------------------------------------
 int main(int argc, char** argv)

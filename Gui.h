@@ -9,7 +9,7 @@ class Downloader;
 class QProgressBar;
 class QLineEdit;
 class QPushButton;
-class XmlCurrencyParser;
+class XmlParser;
 class QLabel;
 class QDate;
 
@@ -19,7 +19,7 @@ Q_OBJECT
 
 private:
     Downloader*   downloaderObject;
-    XmlCurrencyParser* xmlParserObject;
+    XmlParser* xmlParserObject;
 
     QProgressBar* downProgressBar;
     QPushButton*  goButton;

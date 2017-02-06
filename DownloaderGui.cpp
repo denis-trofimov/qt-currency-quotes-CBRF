@@ -1,7 +1,7 @@
 #include <QtWidgets>
 #include "Downloader.h"
-#include "DownloaderGui.h"
-#include "XmlCurrencyParser.h"
+#include "Gui.h"
+#include "XmlParser.h"
 
 // ----------------------------------------------------------------------
 Gui::Gui(QWidget* pwgt /*=0*/) : QWidget(pwgt)
@@ -61,8 +61,8 @@ Gui::Gui(QWidget* pwgt /*=0*/) : QWidget(pwgt)
 
     setWindowTitle(tr("Курс валют ЦБ РФ"));
 
-//    xmlParserObject = new XmlCurrencyParser(this);
-    xmlParserObject = new XmlCurrencyParser(this, currencyCode);
+//    xmlParserObject = new XmlParser(this);
+    xmlParserObject = new XmlParser(this, currencyCode);
     downloaderObject = new Downloader(this);
 
 //Connectors-------------------------------------------------------------------
@@ -75,15 +75,15 @@ Gui::Gui(QWidget* pwgt /*=0*/) : QWidget(pwgt)
             this,  SLOT(slotDone(const QUrl&, const QByteArray&))
            );
     connect(currencyCodeLineEdit, &QLineEdit::textEdited,
-            xmlParserObject, &XmlCurrencyParser::setCurrencyName
+            xmlParserObject, &XmlParser::setCurrencyName
             );
     connect(currencyCodeLineEdit, &QLineEdit::textChanged,
-            xmlParserObject, &XmlCurrencyParser::setCurrencyName
+            xmlParserObject, &XmlParser::setCurrencyName
             );
     connect(this, &Gui::loadedXml,
-            xmlParserObject, &XmlCurrencyParser::getCurrencyByCode
+            xmlParserObject, &XmlParser::getCurrencyByCode
             );
-    connect(xmlParserObject, &XmlCurrencyParser::parseSucces,
+    connect(xmlParserObject, &XmlParser::parseSucces,
             this, &Gui::slotParseSucces
             );
 }
