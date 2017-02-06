@@ -1,7 +1,7 @@
 // ======================================================================
 //  Downloader.cpp
 // ======================================================================
-//                   This file is a part of the book 
+//                   This file is a part of the book
 //             "Qt 5.3 Professional programming with C++"
 // ======================================================================
 //  Copyright (c) 2014 by Max Schlee

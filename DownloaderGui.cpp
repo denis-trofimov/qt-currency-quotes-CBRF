@@ -1,53 +1,10 @@
-/* Qt app for getting currency quotes from CB RF.
- *
- * Copyright 2017 Denis Trofimov <silaradost@yandex.ru>
- * Based on modified DownloaderGui app by Max Schlee
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
- * MA 02110-1301, USA.
- *
- *
- */
-
-// ======================================================================
-// DownloaderGui.cpp
-// ======================================================================
-//                   This file is a part of the book 
-//             "Qt 5.3 Professional programming with C++"
-// ======================================================================
-//  Copyright (c) 2014 by Max Schlee
-//
-//  Email : Max.Schlee@neonway.com
-//  Blog  : http://www.maxschlee.com
-//
-//  Social Networks
-//  ---------------
-//  FaceBook : http://www.facebook.com/mschlee
-//  Twitter  : http://twitter.com/Max_Schlee
-//  2Look.me : http://2look.me/NW100003
-//  Xing     : http://www.xing.com/profile/Max_Schlee
-//  vk.com   : https://vk.com/max.schlee
-// ======================================================================
-
 #include <QtWidgets>
 #include "Downloader.h"
 #include "DownloaderGui.h"
 #include "XmlCurrencyParser.h"
 
 // ----------------------------------------------------------------------
-DownloaderGui::DownloaderGui(QWidget* pwgt /*=0*/) : QWidget(pwgt)
+Gui::Gui(QWidget* pwgt /*=0*/) : QWidget(pwgt)
 {
     currencyCode = "USD";
     date = (QDate().currentDate()).addDays(1);
@@ -123,16 +80,16 @@ DownloaderGui::DownloaderGui(QWidget* pwgt /*=0*/) : QWidget(pwgt)
     connect(currencyCodeLineEdit, &QLineEdit::textChanged,
             xmlParserObject, &XmlCurrencyParser::setCurrencyName
             );
-    connect(this, &DownloaderGui::loadedXml,
+    connect(this, &Gui::loadedXml,
             xmlParserObject, &XmlCurrencyParser::getCurrencyByCode
             );
     connect(xmlParserObject, &XmlCurrencyParser::parseSucces,
-            this, &DownloaderGui::slotParseSucces
+            this, &Gui::slotParseSucces
             );
 }
 
 // ----------------------------------------------------------------------
-void DownloaderGui::slotGo()
+void Gui::slotGo()
 {
     QDate inputDate = QDate::fromString(dateLineEdit->text(),"dd.MM.yyyy");
     if(!inputDate.isValid()
@@ -170,7 +127,7 @@ void DownloaderGui::slotGo()
 }
 
 // ----------------------------------------------------------------------
-void DownloaderGui::slotDownloadProgress(qint64 nReceived, qint64 nTotal)
+void Gui::slotDownloadProgress(qint64 nReceived, qint64 nTotal)
 {
     if (nTotal <= 0) {
         slotError(tr("An error while download is occured"));
@@ -180,7 +137,7 @@ void DownloaderGui::slotDownloadProgress(qint64 nReceived, qint64 nTotal)
 }
 
 // ----------------------------------------------------------------------
-void DownloaderGui::slotDone(const QUrl& url, const QByteArray& ba)
+void Gui::slotDone(const QUrl& url, const QByteArray& ba)
 {
     //TODO rewrite with lambda
     emit loadedXml(ba);
@@ -188,7 +145,7 @@ void DownloaderGui::slotDone(const QUrl& url, const QByteArray& ba)
 }
 
 // ----------------------------------------------------------------------
-void DownloaderGui::slotError()
+void Gui::slotError()
 {
     QMessageBox::critical(0,
                           tr("Error"),
@@ -197,7 +154,7 @@ void DownloaderGui::slotError()
 }
 
 // ----------------------------------------------------------------------
-void DownloaderGui::slotError(const QString& errorMessage =
+void Gui::slotError(const QString& errorMessage =
         "An error while download is occured")
 {
     QMessageBox::critical(0,
@@ -207,7 +164,7 @@ void DownloaderGui::slotError(const QString& errorMessage =
 }
 
 // ----------------------------------------------------------------------
-void DownloaderGui::slotParseSucces(const QString& valueParsed,
+void Gui::slotParseSucces(const QString& valueParsed,
                                     const QString& nominalParsed,
                                     const QString& nameParsed)
 {
