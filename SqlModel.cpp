@@ -82,13 +82,14 @@ SqlModel::SqlModel(QObject *parent) :
     QObject(parent)
 {
     QLocale::setDefault(QLocale::Russian);
-    if(slotCreateConnection())
-        qDebug() << "Database and tables opened";
+//    if(slotCreateConnection())
+//        qDebug() << "Database and tables opened";
 }
+
 
 bool SqlModel::slotWrite(const QString& charcode,
                     const QString& value,
-                    const QString& date,
+                    const QDate& date,
                     const QString& name,
                     const QString& nominal,
                     const QString& engname
@@ -96,7 +97,7 @@ bool SqlModel::slotWrite(const QString& charcode,
 {
     //Write if not have same pair <charcode, value> in daily_quotes
 
-    qlonglong daysJulian = QDate::fromString(date,"dd.MM.yyyy").toJulianDay();
+    qlonglong daysJulian = date.toJulianDay();
     QSqlQueryModel quotesModel;
     quotesModel.setQuery(QString(
                              "SELECT COUNT(*) "
@@ -166,7 +167,7 @@ bool SqlModel::slotWrite(const QString& charcode,
                                " VALUES ('%1', '%2', '%3');";
         QString insertQuotesRecord = insertQuotes.arg(charcode)
                 .arg(value)
-                .arg(QDate::fromString(date,"dd.MM.yyyy").toJulianDay());
+                .arg(date.toJulianDay());
         QSqlQuery quotesQuery;
         if(!quotesQuery.exec(insertQuotesRecord))
         {

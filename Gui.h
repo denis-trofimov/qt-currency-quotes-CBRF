@@ -3,6 +3,10 @@
 #include <QWidget>
 #include <QUrl>
 #include <QDate>
+#include <QtWidgets>
+#include "Downloader.h"
+#include "XmlParser.h"
+#include "SqlModel.h"
 
 class Downloader;
 class QProgressBar;
@@ -11,7 +15,6 @@ class QPushButton;
 class XmlParser;
 class QLabel;
 class QDate;
-class SqlModel;
 
 // ======================================================================
 class Gui : public QWidget {
@@ -57,7 +60,7 @@ private slots:
     void slotDownloadProgress(qint64, qint64                );
     void slotDone            (const QUrl&, const QByteArray&);
     void slotError           (const QString&                );
-    void slotError           (               );
+//    void slotError           (               );
     void slotParseSucces(const QString& valueParsed,
                          const QString& nominalParsed,
                          const QString& nameParsed);

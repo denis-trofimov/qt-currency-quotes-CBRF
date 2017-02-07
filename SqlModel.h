@@ -28,7 +28,7 @@ public slots:
     bool slotCreateConnection();
     bool slotWrite(const QString& charcode,
                    const QString& value,
-                   const QString& date,
+                   const QDate &date,
                    const QString& name,
                    const QString& nominal,
                    const QString& engname = NULL

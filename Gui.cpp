@@ -1,8 +1,4 @@
-#include <QtWidgets>
-#include "Downloader.h"
 #include "Gui.h"
-#include "XmlParser.h"
-#include "SqlModel.h"
 
 // ----------------------------------------------------------------------
 Gui::Gui(QWidget* pwgt /*=0*/) : QWidget(pwgt)
@@ -61,22 +57,27 @@ Gui::Gui(QWidget* pwgt /*=0*/) : QWidget(pwgt)
     setLayout(pLayout);
 
     setWindowTitle(tr("Курс валют ЦБ РФ"));
+    this->show();
 
-//    xmlParserObject = new XmlParser(this);
-    xmlParserObject = new XmlParser(this, currencyCode);
-    downloaderObject = new Downloader(this);
-    sqlModelObject = new SqlModel(this);
-
-
-//Connectors-------------------------------------------------------------------
-
+    //Connectors after constructors--------------------------------------------
     connect(goButton, SIGNAL(clicked()), this, SLOT(slotGo()));
+
+    sqlModelObject = new SqlModel(this);
+    connect(sqlModelObject, &SqlModel::error,
+            this, &Gui::slotError);
+    bool isConnected = sqlModelObject->slotCreateConnection();
+//        qDebug() << "Database and tables opened";
+
+
+    downloaderObject = new Downloader(this);
     connect(downloaderObject, SIGNAL(downloadProgress(qint64, qint64)),
             this,  SLOT(slotDownloadProgress(qint64, qint64))
            );
     connect(downloaderObject, SIGNAL(done(const QUrl&, const QByteArray&)),
             this,  SLOT(slotDone(const QUrl&, const QByteArray&))
            );
+
+    xmlParserObject = new XmlParser(this, currencyCode);
     connect(currencyCodeLineEdit, &QLineEdit::textEdited,
             xmlParserObject, &XmlParser::setCurrencyName
             );
@@ -160,13 +161,13 @@ void Gui::slotDone(const QUrl& url, const QByteArray& ba)
 }
 
 // ----------------------------------------------------------------------
-void Gui::slotError()
-{
-    QMessageBox::critical(0,
-                          tr("Error"),
-                          tr("An error while download is occured")
-                         );
-}
+//void Gui::slotError()
+//{
+//    QMessageBox::critical(0,
+//                          tr("Error"),
+//                          tr("An error while download is occured")
+//                         );
+//}
 
 // ----------------------------------------------------------------------
 void Gui::slotError(const QString& errorMessage =
@@ -186,4 +187,10 @@ void Gui::slotParseSucces(const QString& valueParsed,
     valueResultLabel->setText(valueParsed);
     nominalResultLabel->setText(nominalParsed);
     nameResultLabel->setText(nameParsed);
+
+    sqlModelObject->slotWrite(currencyCode,
+                              valueParsed,
+                              date,
+                              nameParsed,
+                              nominalParsed);
 }
