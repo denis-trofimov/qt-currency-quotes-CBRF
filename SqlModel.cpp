@@ -3,13 +3,11 @@
 //Connection to SQL database
 bool SqlModel::slotCreateConnection()
 {
-
     db = QSqlDatabase::addDatabase("QSQLITE");
     db.setDatabaseName("qtccCBRF.sqlite3");
     db.setHostName("localhost");
     db.setUserName("Denis Trofimov");
     db.setPassword("password");
-
 
     if(!db.open())
     {
@@ -19,11 +17,10 @@ bool SqlModel::slotCreateConnection()
     }
 
     //Check which tables have
-
     QStringList tablesList = db.tables();
-
     if(!tablesList.contains("currency_lib"))
     {
+        //Format of <Valuta name="Foreign Currency Market Lib">
         //<Item ID="R01235">
         //<Name>Доллар США</Name>
         //<EngName>US Dollar</EngName>
@@ -43,8 +40,8 @@ bool SqlModel::slotCreateConnection()
         if(!query.exec(sql))
         {
             qDebug() << "Unable to create a table currency_lib in SQLite:"
-                         << db.lastError();
-            emit error(tr("Ошибка при создании таблицы currency_lib в БД SQLite."));
+                     << db.lastError();
+            emit error(tr("Ошибка при создании таблицы currency_lib в БД."));
             return false;
         }
         db.commit();
@@ -52,6 +49,7 @@ bool SqlModel::slotCreateConnection()
 
     if(!tablesList.contains("daily_quotes"))
     {
+        //Format of <ValCurs Date="02.03.2002" name="Foreign Currency Market">
         //<Valute ID="R01235">
         //	<NumCode>840</NumCode>
         //	<CharCode>USD</CharCode>
@@ -74,8 +72,8 @@ bool SqlModel::slotCreateConnection()
         if(!query.exec(sql))
         {
             qDebug() << "Unable to create a table daily_quotes in SQLite:"
-                         << db.lastError();
-            emit error(tr("Ошибка при создании таблицы daily_quotes в БД SQLite."));
+                     << db.lastError();
+            emit error(tr("Ошибка при создании таблицы daily_quotes в БД."));
             return false;
         }
         db.commit();
@@ -152,15 +150,15 @@ bool SqlModel::slotWrite(const QString& charcode,
                                 ", engname"
                                 ")"
                                 " VALUES ('%1', '%2', '%3', '%4');";
-            QString insertLibRecord = insertLib.arg(charcode)
+            insertLib = insertLib.arg(charcode)
                     .arg(name)
                     .arg(nominal.toInt())
                     .arg(engname);
             QSqlQuery libQuery = QSqlQuery(db);
-            qDebug() << insertLibRecord;
-            if(!libQuery.exec(insertLibRecord))
+            if(!libQuery.exec(insertLib))
             {
-                qDebug() << "Unable to make insert opeation insertLibRecord";
+                emit error(tr("Ошибка записи в таблицу currency_lib в БД."));
+                qDebug() << "Unable to execute:"  << insertLib;
                 return false;
             }
 
@@ -175,15 +173,16 @@ bool SqlModel::slotWrite(const QString& charcode,
                                ", date"
                                ")"
                                " VALUES ('%1', '%2', '%3');";
-        QString insertQuotesRecord = insertQuotes.arg(charcode)
+        insertQuotes = insertQuotes.arg(charcode)
                 .arg(value)
                 .arg(date.toJulianDay());
-        qDebug() << insertQuotesRecord;
-        QSqlQuery quotesQuery;
 
-        if(!quotesQuery.exec(insertQuotesRecord))
+        QSqlQuery quotesQuery = QSqlQuery(db);
+
+        if(!quotesQuery.exec(insertQuotes))
         {
-            qDebug() << "Unable to make insert opeation insertLibRecord";
+            emit error(tr("Ошибка записи в таблицу daily_quotes в БД."));
+            qDebug() << "Unable to execute:"  << insertQuotes;
             return false;
         }
         db.commit();
@@ -204,12 +203,10 @@ bool SqlModel::slotReadCurrencyValue(const QString& charcode,
                 .arg(charcode)
                 .arg(QString::number(daysJulian, 10));
 
-    //readQString =  "SELECT * "
-//                   "FROM daily_quotes; ";
-    qDebug() << readQString;
     if(!quotesQuery.exec(readQString))
     {
-        qDebug() << "Unable to execute read FROM daily_quotes."  << readQString;
+        emit error(tr("Ошибка чтения таблицы daily_quotes из БД."));
+        qDebug() << "Unable to execute:"  << readQString;
         return false;
     }
     QSqlRecord rec = quotesQuery.record();
@@ -217,22 +214,10 @@ bool SqlModel::slotReadCurrencyValue(const QString& charcode,
     if(quotesQuery.next())
     {
         value = quotesQuery.value(rec.indexOf("value")).toString();
-        qDebug() << "value = " << value;
         return true;
     }
-    qDebug() << quotesQuery.value(rec.indexOf("value")).toString();
-    //else
-    return false;
-//    qDebug() << quotesQuery.rowCount();
-//    if (quotesQuery.lastError().isValid()) {
-//        qDebug() << quotesQuery.lastError();
-////        return false;
-//    }
-//    if(quotesQuery.record(1).isEmpty())
-//        qDebug() << "QSqlQueryModel record(1) is empty.";
-////        return false;
-//    value = quotesQuery.record(0).value("value").toString();
-
+    else
+        return false;
 }
 
 void SqlModel::slotView()
