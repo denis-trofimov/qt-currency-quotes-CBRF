@@ -198,7 +198,7 @@ void Gui::slotParseSucces(const QString& valueParsed,
     nominalResultLabel->setText(nominalParsed);
     nameResultLabel->setText(nameParsed);
 
-    sqlModelObject->slotWrite(currencyCode,
+    sqlModelObject->slotWrite(dateLineEdit->text(),
                               valueParsed,
                               date,
                               nameParsed,
