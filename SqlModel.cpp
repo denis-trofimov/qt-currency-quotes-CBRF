@@ -191,14 +191,18 @@ bool SqlModel::slotWrite(const QString& charcode,
 }
 
 bool SqlModel::slotReadCurrencyValue(const QString& charcode,
-                          const QDate& date, QString& value)
+                                     const QDate& date,
+                                     QString& value,
+                                     QString& nominal,
+                                     QString& name)
 {
     QSqlQuery quotesQuery = QSqlQuery(db);
 
     qlonglong daysJulian = date.toJulianDay();
-    QString readQString = "SELECT value "
-                        "FROM daily_quotes "
-                        "WHERE charcode = '%1' AND date = '%2';";
+    QString readQString = "SELECT value, nominal, name "
+                          "FROM daily_quotes as dq, currency_lib as cl "
+                          "WHERE dq.charcode = '%1' AND date = '%2' "
+                          "AND cl.charcode = '%1';";
     readQString = readQString
                 .arg(charcode)
                 .arg(QString::number(daysJulian, 10));
@@ -214,6 +218,8 @@ bool SqlModel::slotReadCurrencyValue(const QString& charcode,
     if(quotesQuery.next())
     {
         value = quotesQuery.value(rec.indexOf("value")).toString();
+        nominal = quotesQuery.value(rec.indexOf("nominal")).toString();
+        name = quotesQuery.value(rec.indexOf("name")).toString();
         return true;
     }
     else

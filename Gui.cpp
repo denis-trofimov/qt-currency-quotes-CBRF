@@ -106,6 +106,7 @@ Gui::Gui(QWidget* pwgt /*=0*/) : QWidget(pwgt)
 // ----------------------------------------------------------------------
 void Gui::slotGo()
 {
+    downProgressBar->setValue(0);
     QDate inputDate = QDate::fromString(dateLineEdit->text(),"dd.MM.yyyy");
     if(!inputDate.isValid()
             || inputDate > (QDate().currentDate()).addDays(1)
@@ -118,12 +119,16 @@ void Gui::slotGo()
     }
 
     //First look in db, later look in XML.
-
     if(sqlModelObject->slotReadCurrencyValue(currencyCodeLineEdit->text(),
                                              inputDate,
-                                             value))
+                                             value,
+                                             nominal,
+                                             name
+                                             ))
     {
         valueResultLabel->setText(value);
+        nominalResultLabel->setText(nominal);
+        nameResultLabel->setText(name);
     }
 
     else
@@ -198,7 +203,7 @@ void Gui::slotParseSucces(const QString& valueParsed,
     nominalResultLabel->setText(nominalParsed);
     nameResultLabel->setText(nameParsed);
 
-    sqlModelObject->slotWrite(dateLineEdit->text(),
+    sqlModelObject->slotWrite(currencyCodeLineEdit->text(),
                               valueParsed,
                               date,
                               nameParsed,

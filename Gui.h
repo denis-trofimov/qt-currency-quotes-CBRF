@@ -46,8 +46,8 @@ private:
     QString currencyCode;
     QString value;
     QDate date;
-//    QString nominal;
-//    QString currencyName;
+    QString nominal;
+    QString name;
 
 public:
     Gui(QWidget* pwgt = 0);

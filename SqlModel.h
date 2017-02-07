@@ -37,7 +37,9 @@ public slots:
             );
     bool slotReadCurrencyValue(const QString& charcode,
                                const QDate &date,
-                               QString &value);
+                               QString &value,
+                               QString &nominal,
+                               QString &name);
     void slotView();
     //bool slotReadLib(QSqlTableModel&) = 0;
 };
