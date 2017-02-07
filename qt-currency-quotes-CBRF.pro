@@ -1,13 +1,14 @@
 TEMPLATE     = app
-QT          += widgets network xml
+QT          += widgets network xml sql
 SOURCES      = main.cpp \
                Downloader.cpp \
                DownloaderGui.cpp \
-               XmlParser.cpp
+               XmlParser.cpp \
+    sqlmodel.cpp
 HEADERS      = Downloader.h \
                Gui.h \
                XmlParser.h \
-    Gui.h
+    sqlmodel.h
 windows:TARGET = ../qt-currency-quotes-CBRF
 
 OTHER_FILES += \

@@ -117,7 +117,7 @@ void XmlParser::getCurrencyByCode(const QByteArray & data)
 
 // ----------------------------------------------------------------------
 XmlParser::XmlParser(QObject* pobj,
-                                     const QString& curCode)
+                     const QString& curCode)
     : QObject(pobj), currencyCode(curCode)
 {
     currencyCode = curCode;

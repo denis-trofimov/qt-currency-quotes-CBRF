@@ -2,8 +2,8 @@
 ## Qt app for getting currency quotes from CB RF.
 
 It is an application capable of getting currency quotes from Central Bank of
-Russian Fed. site. URLs like "http://www.cbr.ru/scripts/XML_daily.asp?" are to
-be processed. Next feature to implement is to store quotes in local database
+Russian Federation site. URLs like "http://www.cbr.ru/scripts/XML_daily.asp?"
+are processed. Next feature to implement is to store quotes in local database
 SQLite.
 
 Copyright 2017 Denis Trofimov <silaradost@yandex.ru>
@@ -11,7 +11,7 @@ Copyright 2017 Denis Trofimov <silaradost@yandex.ru>
 Uses code of tutorial projects XmlDOMRead, DownloaderGui by Max Schlee from the
 book "Qt 5.3 Professional programming with C++".
 
-With all due respect thanks to Max Schlee.
+With all due respect thanks to Max Schlee as a great teacher.
 // ======================================================================
 //                   This file is a part of the book
 //             "Qt 5.3 Professional programming with C++"
