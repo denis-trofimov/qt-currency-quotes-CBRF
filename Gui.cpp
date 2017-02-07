@@ -119,7 +119,7 @@ void Gui::slotGo()
 
     //First look in db, later look in XML.
 
-    if(sqlModelObject->slotReadCurrencyValue(currencyCode,
+    if(sqlModelObject->slotReadCurrencyValue(currencyCodeLineEdit->text(),
                                              inputDate,
                                              value))
     {
