@@ -2,7 +2,7 @@
 #include "sqlmodel.h"
 
 //Connection to SQL database
-bool MySqlModel::slotCreateConnection()
+bool SqlModel::slotCreateConnection()
 {
 
     db = QSqlDatabase::addDatabase("QSQLITE");
@@ -79,7 +79,7 @@ bool MySqlModel::slotCreateConnection()
     return true;
 }
 
-MySqlModel::MySqlModel(QObject *parent) :
+SqlModel::SqlModel(QObject *parent) :
     QObject(parent)
 {
     QLocale::setDefault(QLocale::Russian);
@@ -87,7 +87,7 @@ MySqlModel::MySqlModel(QObject *parent) :
         qDebug() << "Database and tables opened";
 }
 
-bool MySqlModel::slotWrite(const QString& charcode,
+bool SqlModel::slotWrite(const QString& charcode,
                     const QString& value,
                     const QString& date,
                     const QString& name,
@@ -187,7 +187,7 @@ bool MySqlModel::slotWrite(const QString& charcode,
     }
 }
 
-bool MySqlModel::slotReadCurrencyValue(const QString& charcode,
+bool SqlModel::slotReadCurrencyValue(const QString& charcode,
                           const QString& date, QString& value)
 {
     qlonglong daysJulian = QDate::fromString(date,"dd.MM.yyyy").toJulianDay();

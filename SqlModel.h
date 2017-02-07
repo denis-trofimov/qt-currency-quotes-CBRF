@@ -7,7 +7,7 @@
 #include <QDate>
 #include <QLocale>
 
-class MySqlModel : public QObject
+class SqlModel : public QObject
 {
     Q_OBJECT
 
@@ -19,7 +19,7 @@ private:
 
 public:
 //    QLocale locale;
-    explicit MySqlModel(QObject *parent = 0);
+    explicit SqlModel(QObject *parent = 0);
 
 signals:
     void error(const QString&);

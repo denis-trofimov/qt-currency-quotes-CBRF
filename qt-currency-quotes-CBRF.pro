@@ -4,11 +4,11 @@ SOURCES      = main.cpp \
                Downloader.cpp \
                Gui.cpp \
                XmlParser.cpp \
-    sqlmodel.cpp
+    SqlModel.cpp
 HEADERS      = Downloader.h \
                Gui.h \
                XmlParser.h \
-    sqlmodel.h
+    SqlModel.h
 windows:TARGET = ../qt-currency-quotes-CBRF
 
 OTHER_FILES += \
