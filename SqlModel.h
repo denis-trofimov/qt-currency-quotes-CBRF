@@ -8,7 +8,7 @@
 #include <QLocale>
 #include <QtWidgets>
 
-class SqlModel : public QObject
+class SqlModel : public QWidget
 {
     Q_OBJECT
 
@@ -21,7 +21,7 @@ private:
 
 public:
 //    QLocale locale;
-    explicit SqlModel(QObject *parent = 0);
+    explicit SqlModel(QWidget *parent = 0);
 
 signals:
     void error(const QString&);

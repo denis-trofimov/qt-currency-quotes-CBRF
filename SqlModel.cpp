@@ -81,8 +81,8 @@ bool SqlModel::slotCreateConnection()
     return true;
 }
 
-SqlModel::SqlModel(QObject *parent) :
-    QObject(parent)
+SqlModel::SqlModel(QWidget *parent) :
+    QWidget(parent)
 {
     parentWidget = parent; //to pass pointer in View
     QLocale::setDefault(QLocale::Russian);
@@ -193,22 +193,25 @@ bool SqlModel::slotReadCurrencyValue(const QString& charcode,
     QSqlQueryModel quotesModel;
 
     qlonglong daysJulian = date.toJulianDay();
-    QString readQuery = "SELECT 'charcode', 'value', 'date' "
+    QString readQuery = "SELECT 'value' "
                         "FROM 'daily_quotes' "
                         "WHERE 'charcode' = '%1' AND 'date' = '%2';";
 
     quotesModel.setQuery(readQuery
                          .arg(charcode)
                          .arg(QString::number(daysJulian, 10)));
-
+    qDebug() << readQuery
+                .arg(charcode)
+                .arg(QString::number(daysJulian, 10));
+    qDebug() << quotesModel.rowCount();
     if (quotesModel.lastError().isValid()) {
         qDebug() << quotesModel.lastError();
-        return false;
+//        return false;
     }
     if(quotesModel.record(1).isEmpty())
         qDebug() << "QSqlQueryModel record(1) is empty.";
-        return false;
-    value = quotesModel.record(1).value("'value'").toString();
+//        return false;
+    value = quotesModel.record(0).value("'value'").toString();
     qDebug() << "value = " << value;
     return true;
 }
@@ -216,24 +219,24 @@ bool SqlModel::slotReadCurrencyValue(const QString& charcode,
 void SqlModel::slotView()
 {
     QTableView* quotesView = new QTableView();
-    QSqlTableModel quotesModel;
+    QSqlTableModel* quotesModel = new QSqlTableModel(this, db);
 
-    quotesModel.setTable("daily_quotes");
-    quotesModel.select();
-    quotesModel.setEditStrategy(QSqlTableModel::OnManualSubmit);
+    quotesModel->setTable("daily_quotes");
+    quotesModel->select();
+    quotesModel->setEditStrategy(QSqlTableModel::OnManualSubmit);
 
-    quotesView->setModel(&quotesModel);
-    quotesView->resize(450, 100);
+    quotesView->setModel(quotesModel);
+//    quotesView->resize(450, 100);
     quotesView->show();
 
     QTableView* libView = new QTableView();
-    QSqlTableModel libModel;
+    QSqlTableModel* libModel = new QSqlTableModel(this, db);
 
-    libModel.setTable("currency_lib");
-    libModel.select();
-    libModel.setEditStrategy(QSqlTableModel::OnManualSubmit);
+    libModel->setTable("currency_lib");
+    libModel->select();
+    libModel->setEditStrategy(QSqlTableModel::OnManualSubmit);
 
-    libView->setModel(&libModel);
-    libView->resize(450, 100);
+    libView->setModel(libModel);
+//    libView->resize(450, 100);
     libView->show();
 }
