@@ -34,9 +34,9 @@ bool SqlModel::slotCreateConnection()
                 "CREATE TABLE currency_lib ( "
                 "charcode TEXT PRIMARY KEY, "
                 "name       TEXT, "
-                "nominal    INTEGER NOT NULL, "
-                "engname    TEXT"
+                "nominal    INTEGER NOT NULL "
                 ");";
+        //                "engname    TEXT"
         if(!query.exec(sql))
         {
             qDebug() << "Unable to create a table currency_lib in SQLite:"
@@ -95,10 +95,10 @@ bool SqlModel::slotWrite(const QString& charcode,
                     const QString& value,
                     const QDate& date,
                     const QString& name,
-                    const QString& nominal,
-                    const QString& engname
+                    const QString& nominal
                     )
 {
+    //                    const QString& engname
     //Write if not have same pair <charcode, value> in daily_quotes
     QSqlQueryModel quotesModel;
 
@@ -115,7 +115,7 @@ bool SqlModel::slotWrite(const QString& charcode,
         return false;
     }
     int countPairCodeDate = quotesModel.data(quotesModel.index(0, 0)).toInt();
-    qDebug() << "countPairCodeDate=" << countPairCodeDate;
+
     if(countPairCodeDate != 0)
     {
         //not writing at all
@@ -137,7 +137,7 @@ bool SqlModel::slotWrite(const QString& charcode,
             return false;
         }
         int countCharCodeLib = libModel.data(libModel.index(0, 0)).toInt();
-        qDebug() << "countCharCodeLib=" << countCharCodeLib;
+
         if(countCharCodeLib == 0)
         {
             //Should write new record to currency_lib first in case of foreign
@@ -147,13 +147,13 @@ bool SqlModel::slotWrite(const QString& charcode,
                                 "charcode"
                                 ", name"
                                 ", nominal"
-                                ", engname"
                                 ")"
-                                " VALUES ('%1', '%2', '%3', '%4');";
+                                " VALUES ('%1', '%2', '%3');";
+            //                    ", engname"
             insertLib = insertLib.arg(charcode)
                     .arg(name)
-                    .arg(nominal.toInt())
-                    .arg(engname);
+                    .arg(nominal.toInt());
+            //                    .arg(engname);
             QSqlQuery libQuery = QSqlQuery(db);
             if(!libQuery.exec(insertLib))
             {

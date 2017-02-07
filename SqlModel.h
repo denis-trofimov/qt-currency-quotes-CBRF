@@ -32,9 +32,7 @@ public slots:
                    const QString& value,
                    const QDate &date,
                    const QString& name,
-                   const QString& nominal,
-                   const QString& engname = NULL
-            );
+                   const QString& nominal);
     bool slotReadCurrencyValue(const QString& charcode,
                                const QDate &date,
                                QString &value,
