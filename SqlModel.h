@@ -34,9 +34,9 @@ public slots:
                    const QString& engname = NULL
             );
     bool slotReadCurrencyValue(const QString& charcode,
-                               const QString& date,
+                               const QDate &date,
                                QString &value);
-    bool slotReadLib(QSqlTableModel&) = 0;
+    //bool slotReadLib(QSqlTableModel&) = 0;
 };
 
 #endif // SQLMODEL_H

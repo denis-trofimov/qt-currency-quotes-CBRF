@@ -65,7 +65,7 @@ Gui::Gui(QWidget* pwgt /*=0*/) : QWidget(pwgt)
 //    xmlParserObject = new XmlParser(this);
     xmlParserObject = new XmlParser(this, currencyCode);
     downloaderObject = new Downloader(this);
-
+    sqlModelObject = new SqlModel(this);
 
 
 //Connectors-------------------------------------------------------------------
@@ -105,27 +105,39 @@ void Gui::slotGo()
         return;
     }
 
-    QUrl *urlUserInput = new QUrl(urlLineEdit->text());
-    if(!(urlUserInput->isValid()))
+    //First look in db, later look in XML.
+
+    if(sqlModelObject->slotReadCurrencyValue(currencyCode,
+                                             inputDate,
+                                             value))
     {
-        slotError(tr("Введен некорректный адрес сайта!\n"
-                     "Исправьте, пожалуйста."));
-        return;
+        valueResultLabel->setText(value);
     }
 
-    if(date != inputDate)
+    else
     {
-        date = inputDate;
-        QUrlQuery *dateUrlQuery = new QUrlQuery(urlUserInput->query());
-        //Insert new date to QUrlQuery
-        if(dateUrlQuery->hasQueryItem("date_req"))
-            dateUrlQuery->removeQueryItem("date_req");
-        dateUrlQuery->addQueryItem("date_req", inputDate.toString("dd/MM/yyyy"));
-        urlUserInput->setQuery(*dateUrlQuery);
-        urlLineEdit->setText(urlUserInput->toString());
+        QUrl *urlUserInput = new QUrl(urlLineEdit->text());
+        if(!(urlUserInput->isValid()))
+        {
+            slotError(tr("Введен некорректный адрес сайта!\n"
+                         "Исправьте, пожалуйста."));
+            return;
+        }
+
+        if(date != inputDate)
+        {
+            date = inputDate;
+            QUrlQuery *dateUrlQuery = new QUrlQuery(urlUserInput->query());
+            //Insert new date to QUrlQuery
+            if(dateUrlQuery->hasQueryItem("date_req"))
+                dateUrlQuery->removeQueryItem("date_req");
+            dateUrlQuery->addQueryItem("date_req", inputDate.toString("dd/MM/yyyy"));
+            urlUserInput->setQuery(*dateUrlQuery);
+            urlLineEdit->setText(urlUserInput->toString());
+        }
+        downloaderObject->download(*urlUserInput);
     }
 
-    downloaderObject->download(*urlUserInput);
 
 }
 

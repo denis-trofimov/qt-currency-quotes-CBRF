@@ -11,6 +11,7 @@ class QPushButton;
 class XmlParser;
 class QLabel;
 class QDate;
+class SqlModel;
 
 // ======================================================================
 class Gui : public QWidget {
@@ -19,7 +20,7 @@ Q_OBJECT
 private:
     Downloader*   downloaderObject;
     XmlParser* xmlParserObject;
-    MySqlM
+    SqlModel* sqlModelObject;
 
     QProgressBar* downProgressBar;
     QPushButton*  goButton;
@@ -40,7 +41,7 @@ private:
     QLineEdit* urlLineEdit;
 
     QString currencyCode;
-//    QString valueToRUR;
+    QString value;
     QDate date;
 //    QString nominal;
 //    QString currencyName;

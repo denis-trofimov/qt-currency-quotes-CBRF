@@ -104,15 +104,6 @@ bool SqlModel::slotWrite(const QString& charcode,
                              "WHERE charcode = " + charcode + " AND date = " +
                              QString::number(daysJulian, 10) + ";"
                              ));
-
-
-    QSqlQueryModel quotesModel;
-    quotesModel.setQuery(QString(
-                             "SELECT charcode, value, date "
-                             "FROM daily_quotes "
-                             "WHERE charcode = " + charcode + " AND date = " +
-                             QString::number(daysJulian, 10) + ";"
-                             ));
     if (quotesModel.lastError().isValid()) {
         qDebug() << quotesModel.lastError();
         return false;
@@ -187,9 +178,9 @@ bool SqlModel::slotWrite(const QString& charcode,
 }
 
 bool SqlModel::slotReadCurrencyValue(const QString& charcode,
-                          const QString& date, QString& value)
+                          const QDate& date, QString& value)
 {
-    qlonglong daysJulian = QDate::fromString(date,"dd.MM.yyyy").toJulianDay();
+    qlonglong daysJulian = date.toJulianDay();
 
     QSqlQueryModel quotesModel;
     quotesModel.setQuery(QString(
@@ -207,5 +198,6 @@ bool SqlModel::slotReadCurrencyValue(const QString& charcode,
         qDebug() << "QSqlQueryModel record(1) is empty.";
         return false;
     value = quotesModel.record(1).value("value").toString();
+    qDebug() << "value = " << value;
     return true;
 }
