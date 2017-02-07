@@ -6,6 +6,7 @@
 #include <QDebug>
 #include <QDate>
 #include <QLocale>
+#include <QtWidgets>
 
 class SqlModel : public QObject
 {
@@ -13,6 +14,7 @@ class SqlModel : public QObject
 
 private:
     QSqlDatabase db;
+    QObject *parentWidget;
 //    const QString currency_lib;
 //    const QString daily_quotes;
 
@@ -36,6 +38,7 @@ public slots:
     bool slotReadCurrencyValue(const QString& charcode,
                                const QDate &date,
                                QString &value);
+    void slotView();
     //bool slotReadLib(QSqlTableModel&) = 0;
 };
 

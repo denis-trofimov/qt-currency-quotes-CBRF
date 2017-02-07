@@ -84,6 +84,7 @@ bool SqlModel::slotCreateConnection()
 SqlModel::SqlModel(QObject *parent) :
     QObject(parent)
 {
+    parentWidget = parent; //to pass pointer in View
     QLocale::setDefault(QLocale::Russian);
 //    if(slotCreateConnection())
 //        qDebug() << "Database and tables opened";
@@ -114,7 +115,7 @@ bool SqlModel::slotWrite(const QString& charcode,
         return false;
     }
     int countPairCodeDate = quotesModel.data(quotesModel.index(0, 0)).toInt();
-
+    qDebug() << "countPairCodeDate=" << countPairCodeDate;
     if(countPairCodeDate != 0)
     {
         //not writing at all
@@ -136,7 +137,7 @@ bool SqlModel::slotWrite(const QString& charcode,
             return false;
         }
         int countCharCodeLib = libModel.data(libModel.index(0, 0)).toInt();
-
+        qDebug() << "countCharCodeLib=" << countCharCodeLib;
         if(countCharCodeLib == 0)
         {
             //Should write new record to currency_lib first in case of foreign
@@ -210,4 +211,29 @@ bool SqlModel::slotReadCurrencyValue(const QString& charcode,
     value = quotesModel.record(1).value("'value'").toString();
     qDebug() << "value = " << value;
     return true;
+}
+
+void SqlModel::slotView()
+{
+    QTableView* quotesView = new QTableView();
+    QSqlTableModel quotesModel;
+
+    quotesModel.setTable("daily_quotes");
+    quotesModel.select();
+    quotesModel.setEditStrategy(QSqlTableModel::OnManualSubmit);
+
+    quotesView->setModel(&quotesModel);
+    quotesView->resize(450, 100);
+    quotesView->show();
+
+    QTableView* libView = new QTableView();
+    QSqlTableModel libModel;
+
+    libModel.setTable("currency_lib");
+    libModel.select();
+    libModel.setEditStrategy(QSqlTableModel::OnManualSubmit);
+
+    libView->setModel(&libModel);
+    libView->resize(450, 100);
+    libView->show();
 }

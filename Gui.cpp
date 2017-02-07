@@ -25,6 +25,7 @@ Gui::Gui(QWidget* pwgt /*=0*/) : QWidget(pwgt)
     nameLabel = new QLabel(tr("название:"));
     nameResultLabel = new QLabel;
 
+
     QGroupBox* urlGroup = new QGroupBox(
                 tr("Адрес для получения котировок на день"));
     goButton = new QPushButton(tr("Скачать"));
@@ -32,6 +33,8 @@ Gui::Gui(QWidget* pwgt /*=0*/) : QWidget(pwgt)
     urlLineEdit = new QLineEdit(strDownloadLink);
 //    urlLineEdit->setReadOnly(true);
     downProgressBar  = new QProgressBar;
+
+    QPushButton* viewButton = new QPushButton(tr("Просмотреть хранилище БД"));
 
     QFormLayout* settingsLayout = new QFormLayout;
     settingsLayout->addRow(currencyCodeLabel, currencyCodeLineEdit);
@@ -54,6 +57,7 @@ Gui::Gui(QWidget* pwgt /*=0*/) : QWidget(pwgt)
     pLayout->addWidget(settingsGroup);
     pLayout->addWidget(urlGroup);
     pLayout->addWidget(resultGroup);
+    pLayout->addWidget(viewButton);
     setLayout(pLayout);
 
     setWindowTitle(tr("Курс валют ЦБ РФ"));
@@ -67,6 +71,9 @@ Gui::Gui(QWidget* pwgt /*=0*/) : QWidget(pwgt)
             this, &Gui::slotError);
     bool isConnected = sqlModelObject->slotCreateConnection();
 //        qDebug() << "Database and tables opened";
+
+    connect(viewButton, &QPushButton::clicked,
+            sqlModelObject, &SqlModel::slotView);
 
 
     downloaderObject = new Downloader(this);
