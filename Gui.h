@@ -19,6 +19,7 @@ Q_OBJECT
 private:
     Downloader*   downloaderObject;
     XmlParser* xmlParserObject;
+    MySqlM
 
     QProgressBar* downProgressBar;
     QPushButton*  goButton;

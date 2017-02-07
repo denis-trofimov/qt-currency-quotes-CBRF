@@ -96,16 +96,27 @@ bool MySqlModel::slotWrite(const QString& charcode,
                     )
 {
     //Write if not have same pair <charcode, value> in daily_quotes
+
+    qlonglong daysJulian = QDate::fromString(date,"dd.MM.yyyy").toJulianDay();
     QSqlQueryModel quotesModel;
     quotesModel.setQuery(QString(
                              "SELECT COUNT(*) "
                              "FROM daily_quotes "
-                             "WHERE charcode = " + charcode
-                             + " AND date = " + date + ";"
+                             "WHERE charcode = " + charcode + " AND date = " +
+                             QString::number(daysJulian, 10) + ";"
                              ));
 
+
+    QSqlQueryModel quotesModel;
+    quotesModel.setQuery(QString(
+                             "SELECT charcode, value, date "
+                             "FROM daily_quotes "
+                             "WHERE charcode = " + charcode + " AND date = " +
+                             QString::number(daysJulian, 10) + ";"
+                             ));
     if (quotesModel.lastError().isValid()) {
         qDebug() << quotesModel.lastError();
+        return false;
     }
     int countPairCodeDate = quotesModel.data(quotesModel.index(0, 0)).toInt();
 
@@ -126,6 +137,7 @@ bool MySqlModel::slotWrite(const QString& charcode,
 
         if (libModel.lastError().isValid()) {
             qDebug() << libModel.lastError();
+            return false;
         }
         int countCharCodeLib = libModel.data(libModel.index(0, 0)).toInt();
 
@@ -192,6 +204,9 @@ bool MySqlModel::slotReadCurrencyValue(const QString& charcode,
         qDebug() << quotesModel.lastError();
         return false;
     }
+    if(quotesModel.record(1).isEmpty())
+        qDebug() << "QSqlQueryModel record(1) is empty.";
+        return false;
     value = quotesModel.record(1).value("value").toString();
-
+    return true;
 }

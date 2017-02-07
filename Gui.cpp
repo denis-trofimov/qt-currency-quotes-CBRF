@@ -2,6 +2,7 @@
 #include "Downloader.h"
 #include "Gui.h"
 #include "XmlParser.h"
+#include ""
 
 // ----------------------------------------------------------------------
 Gui::Gui(QWidget* pwgt /*=0*/) : QWidget(pwgt)
@@ -64,6 +65,8 @@ Gui::Gui(QWidget* pwgt /*=0*/) : QWidget(pwgt)
 //    xmlParserObject = new XmlParser(this);
     xmlParserObject = new XmlParser(this, currencyCode);
     downloaderObject = new Downloader(this);
+
+
 
 //Connectors-------------------------------------------------------------------
 
