@@ -4,6 +4,7 @@
 //Connection to SQL database
 bool SqlModel::slotCreateConnection()
 {
+    locale(QLocale::Russian);
     db = QSqlDatabase::addDatabase("QSQLITE");
     db.setDatabaseName("qtccCBRF.sqlite3");
     db.setHostName("localhost");
@@ -64,7 +65,7 @@ bool SqlModel::slotCreateConnection()
         QString sql =
                 "CREATE DATABASE daily_quotes ( "
                 "charcode TEXT PRIMARY KEY NOT NULL, "
-                "value      REAL NOT NULL, "
+                "value      TEXT NOT NULL, "
                 "date       INTEGER PRIMARY KEY NOT NULL "
                 ");";
         if(!query.exec(sql))
@@ -141,7 +142,7 @@ bool SqlModel::slotWrite(const QString& charcode,
                                 " VALUES ('%1', '%2', '%3', '%4');";
             QString insertLibRecord = insertLib.arg(charcode)
                     .arg(name)
-                    .arg(nominal)
+                    .arg(nominal.toInt())
                     .arg(engname);
             QSqlQuery libQuery;
             if(!libQuery.exec(insertLibRecord))

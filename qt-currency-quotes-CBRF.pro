@@ -2,7 +2,7 @@ TEMPLATE     = app
 QT          += widgets network xml sql
 SOURCES      = main.cpp \
                Downloader.cpp \
-               DownloaderGui.cpp \
+               Gui.cpp \
                XmlParser.cpp \
     sqlmodel.cpp
 HEADERS      = Downloader.h \
