@@ -59,7 +59,8 @@ private slots:
     void slotGo              (                              );
     void slotDownloadProgress(qint64, qint64                );
     void slotDone            (const QUrl&, const QByteArray&);
-    void slotError           (const QString&                );
+    void slotError           (const QString& errorMessage =
+            "An error while download is occured");
 //    void slotError           (               );
     void slotParseSucces(const QString& valueParsed,
                          const QString& nominalParsed,

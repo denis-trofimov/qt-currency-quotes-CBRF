@@ -76,6 +76,8 @@ Gui::Gui(QWidget* pwgt /*=0*/) : QWidget(pwgt)
     connect(downloaderObject, SIGNAL(done(const QUrl&, const QByteArray&)),
             this,  SLOT(slotDone(const QUrl&, const QByteArray&))
            );
+    connect(downloaderObject, &Downloader::error,
+            this, &Gui::slotError);
 
     xmlParserObject = new XmlParser(this, currencyCode);
     connect(currencyCodeLineEdit, &QLineEdit::textEdited,
@@ -90,6 +92,8 @@ Gui::Gui(QWidget* pwgt /*=0*/) : QWidget(pwgt)
     connect(xmlParserObject, &XmlParser::parseSucces,
             this, &Gui::slotParseSucces
             );
+    connect(xmlParserObject, &XmlParser::error,
+            this, &Gui::slotError);
 }
 
 // ----------------------------------------------------------------------
@@ -170,8 +174,7 @@ void Gui::slotDone(const QUrl& url, const QByteArray& ba)
 //}
 
 // ----------------------------------------------------------------------
-void Gui::slotError(const QString& errorMessage =
-        "An error while download is occured")
+void Gui::slotError(const QString& errorMessage)
 {
     QMessageBox::critical(0,
                           tr("Error"),
