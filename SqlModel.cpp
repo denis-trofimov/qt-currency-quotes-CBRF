@@ -34,11 +34,11 @@ bool SqlModel::slotCreateConnection()
         //Creating of the data base
         QSqlQuery query;
         QString sql =
-                "CREATE DATABASE currency_lib ( "
-                "charcode TEXT PRIMARY KEY NOT NULL, "
-                "name       TEXT, "
-                "nominal    INTEGER NOT NULL, "
-                "engname    TEXT"
+                "CREATE TABLE 'currency_lib' ( "
+                "'charcode' TEXT PRIMARY KEY, "
+                "'name'       TEXT, "
+                "'nominal'    INTEGER NOT NULL, "
+                "'engname'    TEXT"
                 ");";
         if(!query.exec(sql))
         {
@@ -62,10 +62,13 @@ bool SqlModel::slotCreateConnection()
         //Creating of the data base
         QSqlQuery query;
         QString sql =
-                "CREATE DATABASE daily_quotes ( "
-                "charcode TEXT PRIMARY KEY NOT NULL, "
-                "value      TEXT NOT NULL, "
-                "date       INTEGER PRIMARY KEY NOT NULL "
+                "CREATE TABLE 'daily_quotes' ( "
+                "'charcode' TEXT, "
+                "'date'       INTEGER, "
+                "'value'      TEXT NOT NULL, "
+                "PRIMARY KEY('charcode', 'date'), "
+                "CONSTRAINT 'quotes_lib' FOREIGN KEY('charcode') REFERENCES "
+                "'currency_lib' ON DELETE CASCADE ON UPDATE CASCADE"
                 ");";
         if(!query.exec(sql))
         {
@@ -96,15 +99,16 @@ bool SqlModel::slotWrite(const QString& charcode,
                     )
 {
     //Write if not have same pair <charcode, value> in daily_quotes
+    QSqlQueryModel quotesModel;
 
     qlonglong daysJulian = date.toJulianDay();
-    QSqlQueryModel quotesModel;
-    quotesModel.setQuery(QString(
-                             "SELECT COUNT(*) "
-                             "FROM daily_quotes "
-                             "WHERE charcode = " + charcode + " AND date = " +
-                             QString::number(daysJulian, 10) + ";"
-                             ));
+    QString readQuotesQuery = "SELECT COUNT(*) "
+                        "FROM 'daily_quotes' "
+                        "WHERE 'charcode' = '%1' AND 'date' = '%2';";
+    quotesModel.setQuery(readQuotesQuery
+                         .arg(charcode)
+                         .arg(QString::number(daysJulian, 10)));
+
     if (quotesModel.lastError().isValid()) {
         qDebug() << quotesModel.lastError();
         return false;
@@ -120,11 +124,12 @@ bool SqlModel::slotWrite(const QString& charcode,
     {
         //What if currency in lib already?
         QSqlQueryModel libModel;
-        libModel.setQuery(QString(
-                              "SELECT COUNT(*) "
-                              "FROM currency_lib "
-                              "WHERE charcode = " + charcode + ";"
-                              ));
+
+        QString readLibQuery = "SELECT COUNT(*) "
+                            "FROM 'currency_lib' "
+                            "WHERE 'charcode' = '%1'";
+        libModel.setQuery(readLibQuery
+                             .arg(charcode));
 
         if (libModel.lastError().isValid()) {
             qDebug() << libModel.lastError();
@@ -136,12 +141,12 @@ bool SqlModel::slotWrite(const QString& charcode,
         {
             //Should write new record to currency_lib first in case of foreign
             //key check (in future)
-            QString insertLib = "INSERT INTO currency_lib "
+            QString insertLib = "INSERT INTO 'currency_lib' "
                                 "("
-                                "charcode"
-                                ", name"
-                                ", nominal"
-                                ", engname"
+                                "'charcode'"
+                                ", 'name'"
+                                ", 'nominal'"
+                                ", 'engname'"
                                 ")"
                                 " VALUES ('%1', '%2', '%3', '%4');";
             QString insertLibRecord = insertLib.arg(charcode)
@@ -149,6 +154,7 @@ bool SqlModel::slotWrite(const QString& charcode,
                     .arg(nominal.toInt())
                     .arg(engname);
             QSqlQuery libQuery;
+            qDebug() << insertLibRecord;
             if(!libQuery.exec(insertLibRecord))
             {
                 qDebug() << "Unable to make insert opeation insertLibRecord";
@@ -158,17 +164,19 @@ bool SqlModel::slotWrite(const QString& charcode,
 
         //Should write new record to daily_quotes
 
-        QString insertQuotes = "INSERT INTO daily_quotes "
+        QString insertQuotes = "INSERT INTO 'daily_quotes' "
                                "("
-                               "charcode"
-                               ", value"
-                               ", date"
+                               "'charcode'"
+                               ", 'value'"
+                               ", 'date'"
                                ")"
                                " VALUES ('%1', '%2', '%3');";
         QString insertQuotesRecord = insertQuotes.arg(charcode)
                 .arg(value)
                 .arg(date.toJulianDay());
+        qDebug() << insertQuotesRecord;
         QSqlQuery quotesQuery;
+
         if(!quotesQuery.exec(insertQuotesRecord))
         {
             qDebug() << "Unable to make insert opeation insertLibRecord";
@@ -181,15 +189,16 @@ bool SqlModel::slotWrite(const QString& charcode,
 bool SqlModel::slotReadCurrencyValue(const QString& charcode,
                           const QDate& date, QString& value)
 {
-    qlonglong daysJulian = date.toJulianDay();
-
     QSqlQueryModel quotesModel;
-    quotesModel.setQuery(QString(
-                             "SELECT charcode, value, date "
-                             "FROM daily_quotes "
-                             "WHERE charcode = " + charcode + " AND date = " +
-                             QString::number(daysJulian, 10) + ";"
-                             ));
+
+    qlonglong daysJulian = date.toJulianDay();
+    QString readQuery = "SELECT 'charcode', 'value', 'date' "
+                        "FROM 'daily_quotes' "
+                        "WHERE 'charcode' = '%1' AND 'date' = '%2';";
+
+    quotesModel.setQuery(readQuery
+                         .arg(charcode)
+                         .arg(QString::number(daysJulian, 10)));
 
     if (quotesModel.lastError().isValid()) {
         qDebug() << quotesModel.lastError();
@@ -198,7 +207,7 @@ bool SqlModel::slotReadCurrencyValue(const QString& charcode,
     if(quotesModel.record(1).isEmpty())
         qDebug() << "QSqlQueryModel record(1) is empty.";
         return false;
-    value = quotesModel.record(1).value("value").toString();
+    value = quotesModel.record(1).value("'value'").toString();
     qDebug() << "value = " << value;
     return true;
 }

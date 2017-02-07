@@ -16,4 +16,5 @@ OTHER_FILES += \
     LICENSE \
     xml_examples/XML_daily.asp \
     xml_examples/XML_val.asp \
+    queries.sql
 
