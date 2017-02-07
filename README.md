@@ -7,6 +7,16 @@ I18n is possible.
 
 Copyright 2017 Denis Trofimov <silaradost@yandex.ru>
 
+Main widget.
+
+![2017-02-07 22 04 42](https://cloud.githubusercontent.com/assets/24657082/22707435/36c6ad70-ed8c-11e6-929a-38adca182511.png)
+
+Tables for inspecting model/view of SQLite.
+
+![2017-02-07 22 05 09](https://cloud.githubusercontent.com/assets/24657082/22707436/36c754aa-ed8c-11e6-828d-46c199ed6de7.png)
+
+![2017-02-07 22 05 34](https://cloud.githubusercontent.com/assets/24657082/22707437/36c9dad6-ed8c-11e6-8c5f-feaac7dbcacb.png)
+
 Uses code of tutorial projects XmlDOMRead, DownloaderGui by Max Schlee from the
 book "Qt 5.3 Professional programming with C++".
 
