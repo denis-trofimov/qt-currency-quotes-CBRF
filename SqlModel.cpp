@@ -1,5 +1,4 @@
-
-#include "sqlmodel.h"
+#include "SqlModel.h"
 
 //Connection to SQL database
 bool SqlModel::slotCreateConnection()

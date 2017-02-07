@@ -2,7 +2,7 @@
 #include "Downloader.h"
 #include "Gui.h"
 #include "XmlParser.h"
-#include ""
+#include "SqlModel.h"
 
 // ----------------------------------------------------------------------
 Gui::Gui(QWidget* pwgt /*=0*/) : QWidget(pwgt)
