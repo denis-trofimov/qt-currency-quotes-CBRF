@@ -93,7 +93,7 @@ void Gui::slotGo()
 {
     QDate inputDate = QDate::fromString(dateLineEdit->text(),"dd.MM.yyyy");
     if(!inputDate.isValid()
-            || inputDate > (QDate().currentDate()).addDays(2)
+            || inputDate > (QDate().currentDate()).addDays(1)
             || inputDate < QDate(1992, 7, 1))
     {
         slotError(tr("Введена некорректная дата.\n"

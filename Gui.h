@@ -2,7 +2,6 @@
 
 #include <QWidget>
 #include <QUrl>
-#include <QLocale>
 #include <QDate>
 
 class Downloader;

@@ -2,9 +2,9 @@
 #include "sqlmodel.h"
 
 //Connection to SQL database
-bool SqlModel::slotCreateConnection()
+bool MySqlModel::slotCreateConnection()
 {
-    locale(QLocale::Russian);
+
     db = QSqlDatabase::addDatabase("QSQLITE");
     db.setDatabaseName("qtccCBRF.sqlite3");
     db.setHostName("localhost");
@@ -79,14 +79,15 @@ bool SqlModel::slotCreateConnection()
     return true;
 }
 
-SqlModel::SqlModel(QObject *parent) :
+MySqlModel::MySqlModel(QObject *parent) :
     QObject(parent)
 {
+    QLocale::setDefault(QLocale::Russian);
     if(slotCreateConnection())
         qDebug() << "Database and tables opened";
 }
 
-bool SqlModel::slotWrite(const QString& charcode,
+bool MySqlModel::slotWrite(const QString& charcode,
                     const QString& value,
                     const QString& date,
                     const QString& name,
@@ -115,7 +116,7 @@ bool SqlModel::slotWrite(const QString& charcode,
     }
     else
     {
-        //What if new currency in lib?
+        //What if currency in lib already?
         QSqlQueryModel libModel;
         libModel.setQuery(QString(
                               "SELECT COUNT(*) "
@@ -163,7 +164,7 @@ bool SqlModel::slotWrite(const QString& charcode,
                                " VALUES ('%1', '%2', '%3');";
         QString insertQuotesRecord = insertQuotes.arg(charcode)
                 .arg(value)
-                .arg(date);
+                .arg(QDate::fromString(date,"dd.MM.yyyy").toJulianDay());
         QSqlQuery quotesQuery;
         if(!quotesQuery.exec(insertQuotesRecord))
         {
@@ -172,4 +173,25 @@ bool SqlModel::slotWrite(const QString& charcode,
         }
         return true;
     }
+}
+
+bool MySqlModel::slotReadCurrencyValue(const QString& charcode,
+                          const QString& date, QString& value)
+{
+    qlonglong daysJulian = QDate::fromString(date,"dd.MM.yyyy").toJulianDay();
+
+    QSqlQueryModel quotesModel;
+    quotesModel.setQuery(QString(
+                             "SELECT charcode, value, date "
+                             "FROM daily_quotes "
+                             "WHERE charcode = " + charcode + " AND date = " +
+                             QString::number(daysJulian, 10) + ";"
+                             ));
+
+    if (quotesModel.lastError().isValid()) {
+        qDebug() << quotesModel.lastError();
+        return false;
+    }
+    value = quotesModel.record(1).value("value").toString();
+
 }

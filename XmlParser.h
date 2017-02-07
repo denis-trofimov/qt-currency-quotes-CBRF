@@ -7,7 +7,7 @@
 #include <QObject>
 #include <QtXml>
 #include <QDebug>
-#include <QLocale>
+
 
 class QXmlStreamReader;
 
