@@ -9,7 +9,7 @@ HEADERS      = Downloader.h \
                Gui.h \
                XmlParser.h \
     SqlModel.h
-windows:TARGET = ../qt-currency-quotes-CBRF
+windows:TARGET = ../currency-quotes-CBRF/currency-quotes-CBRF
 
 OTHER_FILES += \
     README.md \
@@ -18,3 +18,4 @@ OTHER_FILES += \
     xml_examples/XML_val.asp \
     queries.sql
 
+windows:QMAKE_POST_LINK += windeployqt $$OUT_PWD/currency-quotes-CBRF/currency-quotes-CBRF.exe
