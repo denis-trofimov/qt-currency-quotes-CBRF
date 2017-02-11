@@ -11,8 +11,8 @@ bool SqlModel::slotCreateConnection()
 
     if(!db.open())
     {
-        qDebug() << "Cannot open SQLite database:" << db.lastError();
-        emit error(tr("Ошибка при открытии локальной БД SQLite."));
+        qDebug() << "Can not open local database SQLite:" << db.lastError();
+        emit error(tr("Can not open local database SQLite."));
         return db.open();
     }
 
@@ -39,9 +39,9 @@ bool SqlModel::slotCreateConnection()
         //                "engname    TEXT"
         if(!query.exec(sql))
         {
-            qDebug() << "Unable to create a table currency_lib in SQLite:"
+            qDebug() << "Unable to create a table currency_lib in the database:"
                      << db.lastError();
-            emit error(tr("Ошибка при создании таблицы currency_lib в БД."));
+            emit error(tr("Unable to create a table currency_lib in the database."));
             return false;
         }
         db.commit();
@@ -71,9 +71,9 @@ bool SqlModel::slotCreateConnection()
                 ");";
         if(!query.exec(sql))
         {
-            qDebug() << "Unable to create a table daily_quotes in SQLite:"
+            qDebug() << "Unable to create a table daily_quotes in the database:"
                      << db.lastError();
-            emit error(tr("Ошибка при создании таблицы daily_quotes в БД."));
+            emit error(tr("Unable to create a table daily_quotes in the database."));
             return false;
         }
         db.commit();
@@ -157,7 +157,7 @@ bool SqlModel::slotWrite(const QString& charcode,
             QSqlQuery libQuery = QSqlQuery(db);
             if(!libQuery.exec(insertLib))
             {
-                emit error(tr("Ошибка записи в таблицу currency_lib в БД."));
+                emit error(tr("Can not write to currency_lib table in the database."));
                 qDebug() << "Unable to execute:"  << insertLib;
                 return false;
             }
@@ -181,7 +181,7 @@ bool SqlModel::slotWrite(const QString& charcode,
 
         if(!quotesQuery.exec(insertQuotes))
         {
-            emit error(tr("Ошибка записи в таблицу daily_quotes в БД."));
+            emit error(tr("Can not write to daily_quotes table in the database."));
             qDebug() << "Unable to execute:"  << insertQuotes;
             return false;
         }
@@ -209,7 +209,7 @@ bool SqlModel::slotReadCurrencyValue(const QString& charcode,
 
     if(!quotesQuery.exec(readQString))
     {
-        emit error(tr("Ошибка чтения таблицы daily_quotes из БД."));
+        emit error(tr("Failed to read daily_quotes table from the database."));
         qDebug() << "Unable to execute:"  << readQString;
         return false;
     }

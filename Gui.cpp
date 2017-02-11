@@ -7,35 +7,35 @@ Gui::Gui(QWidget* pwgt /*=0*/) : QWidget(pwgt)
     currencyCode = "USD";
     date = (QDate().currentDate()).addDays(1);
 
-    QGroupBox* settingsGroup = new QGroupBox(tr("Настройки"));
+    QGroupBox* settingsGroup = new QGroupBox(tr("Settings"));
 
     currencyCodeLineEdit = new QLineEdit(currencyCode);
     currencyCodeLineEdit->setMaxLength(3);
     currencyCodeLineEdit->setInputMask("AAA");
-    currencyCodeLabel = new QLabel(tr("код валюты:"));
-    dateLabel = new QLabel(tr("дата:"));
+    currencyCodeLabel = new QLabel(tr("currency code:"));
+    dateLabel = new QLabel(tr("date:"));
     dateLineEdit = new QLineEdit(date.toString("dd.MM.yyyy"));
     dateLineEdit->setInputMask("09.09.9999");
 
 
-    QGroupBox* resultGroup = new QGroupBox(tr("Результат запроса"));
+    QGroupBox* resultGroup = new QGroupBox(tr("Query result"));
     nominalResultLabel = new QLabel("1");
-    nominalLabel = new QLabel(tr("номинал:"));
-    valueLabel = new QLabel(tr("курс к рублю:"));
+    nominalLabel = new QLabel(tr("the denomination of the currency:"));
+    valueLabel = new QLabel(tr("exchange rate to ruble (RUR):"));
     valueResultLabel = new QLabel;
-    nameLabel = new QLabel(tr("название:"));
+    nameLabel = new QLabel(tr("the name of the currency:"));
     nameResultLabel = new QLabel;
 
 
     QGroupBox* urlGroup = new QGroupBox(
-                tr("URL для получения котировок на день"));
-    goButton = new QPushButton(tr("Обновить"));
+                tr("URL address to get daily quotes"));
+    goButton = new QPushButton(tr("Update"));
     QString strDownloadLink = "http://www.cbr.ru/scripts/XML_daily.asp";
     urlLineEdit = new QLineEdit(strDownloadLink);
 //    urlLineEdit->setReadOnly(true);
     downProgressBar  = new QProgressBar;
 
-    QPushButton* viewButton = new QPushButton(tr("Просмотреть хранилище БД"));
+    QPushButton* viewButton = new QPushButton(tr("View database storage"));
 
     QFormLayout* settingsLayout = new QFormLayout;
     settingsLayout->addRow(currencyCodeLabel, currencyCodeLineEdit);
@@ -61,7 +61,7 @@ Gui::Gui(QWidget* pwgt /*=0*/) : QWidget(pwgt)
     pLayout->addWidget(viewButton);
     setLayout(pLayout);
 
-    setWindowTitle(tr("Курс валют ЦБ РФ"));
+    setWindowTitle(tr("Exchange rate of the Central Bank of the Russian Federation"));
     this->show();
 
     //Connectors after constructors--------------------------------------------
@@ -113,9 +113,8 @@ void Gui::slotGo()
             || inputDate > (QDate().currentDate()).addDays(1)
             || inputDate < QDate(1992, 7, 1))
     {
-        slotError(tr("Введена некорректная дата. "
-                     "Диапазон корректных дат от 01.07.1992 до завтрашней даты. "
-                     "Исправьте, пожалуйста."));
+        slotError(tr("Date is invalid. The range of valid dates is from "
+                     "01.07.1992 until tomorrow's date. Correct, please."));
         return;
     }
 
@@ -137,8 +136,8 @@ void Gui::slotGo()
         QUrl *urlUserInput = new QUrl(urlLineEdit->text());
         if(!(urlUserInput->isValid()))
         {
-            slotError(tr("Введен некорректный адрес сайта URL! "
-                         "Исправьте, пожалуйста."));
+            slotError(tr("You have entered an incorrect site URL! "
+                         "Correct, please."));
             return;
         }
 
@@ -163,7 +162,7 @@ void Gui::slotGo()
 void Gui::slotDownloadProgress(qint64 nReceived, qint64 nTotal)
 {
     if (nTotal <= 0) {
-        slotError(tr("An error while download is occured"));
+        slotError(tr("An error while download is occured!"));
         return;
     }
     downProgressBar->setValue(100 * nReceived / nTotal);
@@ -181,8 +180,8 @@ void Gui::slotDone(const QUrl& url, const QByteArray& ba)
 //void Gui::slotError()
 //{
 //    QMessageBox::critical(0,
-//                          tr("Error"),
-//                          tr("An error while download is occured")
+//                          tr("Error!"),
+//                          tr("An error while download is occured!")
 //                         );
 //}
 
@@ -190,7 +189,7 @@ void Gui::slotDone(const QUrl& url, const QByteArray& ba)
 void Gui::slotError(const QString& errorMessage)
 {
     QMessageBox::critical(0,
-                          tr("Error"),
+                          tr("Error!"),
                           errorMessage
                          );
 }
