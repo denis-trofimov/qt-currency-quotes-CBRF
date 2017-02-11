@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+        <file>qt-currency-quotes-CBRF_en.qm</file>
+        <file>qt-currency-quotes-CBRF_ru.qm</file>
+    </qresource>
+</RCC>

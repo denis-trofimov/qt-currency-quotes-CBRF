@@ -27,3 +27,6 @@ windows {
 #    QMAKE_POST_LINK += windeployqt $$OUT_PWD/currency-quotes-CBRF/currency-quotes-CBRF.exe
     QMAKE_POST_LINK += windeployqt $$join(DESTDIR_TARGET,".",,TARGET_EXT)
 }
+
+RESOURCES += \
+    qt-currency-quotes-CBRF.qrc

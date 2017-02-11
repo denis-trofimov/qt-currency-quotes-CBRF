@@ -62,7 +62,7 @@ Gui::Gui(QWidget* pwgt /*=0*/) : QWidget(pwgt)
     setLayout(pLayout);
 
     setWindowTitle(tr("Exchange rate of the Central Bank of the Russian Federation"));
-    this->show();
+    //this->show();
 
     //Connectors after constructors--------------------------------------------
     connect(goButton, SIGNAL(clicked()), this, SLOT(slotGo()));
