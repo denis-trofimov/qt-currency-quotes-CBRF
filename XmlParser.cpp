@@ -35,8 +35,8 @@ void XmlParser::traverseNode(const QDomNode& node)
                         if(!domElement.isNull())
                             nominal = domElement.text();
                         else
-                            *errorMsg += tr("Тэг <Nominal> не найден в XML"
-                                            "документе.\n");
+                            *errorMsg += tr("Тэг <Nominal> не найден в XML "
+                                            "документе.");
                     }
 
                     domElement = domNode.nextSiblingElement("Name");
@@ -48,8 +48,8 @@ void XmlParser::traverseNode(const QDomNode& node)
                         if(!domElement.isNull())
                             name = domElement.text();
                         else
-                            *errorMsg += tr("Тэг <Name> не найден в XML"
-                                            "документе.\n");
+                            *errorMsg += tr("Тэг <Name> не найден в XML "
+                                            "документе.");
                     }
 
                     domElement = domNode.nextSiblingElement("Value");
@@ -61,8 +61,8 @@ void XmlParser::traverseNode(const QDomNode& node)
                         if(!domElement.isNull())
                             valueToRUR = domElement.text();
                         else
-                            *errorMsg += tr("Тэг <Value> не найден в XML"
-                                            "документе.\n");
+                            *errorMsg += tr("Тэг <Value> не найден в XML "
+                                            "документе.");
                     }
 
                     if(errorMsg->isEmpty())

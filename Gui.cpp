@@ -28,7 +28,7 @@ Gui::Gui(QWidget* pwgt /*=0*/) : QWidget(pwgt)
 
 
     QGroupBox* urlGroup = new QGroupBox(
-                tr("Адрес для получения котировок на день"));
+                tr("URL для получения котировок на день"));
     goButton = new QPushButton(tr("Обновить"));
     QString strDownloadLink = "http://www.cbr.ru/scripts/XML_daily.asp";
     urlLineEdit = new QLineEdit(strDownloadLink);
@@ -113,8 +113,8 @@ void Gui::slotGo()
             || inputDate > (QDate().currentDate()).addDays(1)
             || inputDate < QDate(1992, 7, 1))
     {
-        slotError(tr("Введена некорректная дата.\n"
-                     "Диапазон дат от 01.07.1992 до завтрашней даты.\n"
+        slotError(tr("Введена некорректная дата. "
+                     "Диапазон корректных дат от 01.07.1992 до завтрашней даты. "
                      "Исправьте, пожалуйста."));
         return;
     }
@@ -137,7 +137,7 @@ void Gui::slotGo()
         QUrl *urlUserInput = new QUrl(urlLineEdit->text());
         if(!(urlUserInput->isValid()))
         {
-            slotError(tr("Введен некорректный адрес сайта!\n"
+            slotError(tr("Введен некорректный адрес сайта URL! "
                          "Исправьте, пожалуйста."));
             return;
         }
