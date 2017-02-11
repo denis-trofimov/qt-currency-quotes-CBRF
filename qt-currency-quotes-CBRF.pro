@@ -18,7 +18,7 @@ OTHER_FILES += \
     queries.sql
 
 TRANSLATIONS = qt-currency-quotes-CBRF_ru.ts qt-currency-quotes-CBRF_en.ts
-QMAKE_POST_LINK += lupdate $$PWD/qt-currency-quotes-CBRF.pro
+#QMAKE_POST_LINK += lupdate $$PWD/qt-currency-quotes-CBRF.pro
 
 windows {
     TARGET = qt-currency-quotes-CBRF
