@@ -3,7 +3,11 @@
 This application gets currency quotes from Central Bank of Russian Fedderation site.
 URLs like "http://www.cbr.ru/scripts/XML_daily.asp?" are processed.
 New: it now stores quotes in local database SQLite.
-I18n is possible.
+New: Debian 8 compatible binary.
+TODO: win32 cross compile.
+TODO: Foreign Currency Market Reference
+TODO: I18n files
+TODO: English translation
 
 Copyright 2017 Denis Trofimov <silaradost@yandex.ru>
 
@@ -23,7 +27,7 @@ With all due respect thanks to Max Schlee as a great teacher.
 
 Проект дал мне возможный работодатель как тест Qt C++. Поскольку мне интересно овладеть Qt, взялся с интересом.
 
-Задача в том, чтобы достать котировки валют с сайта ЦБ РФ, отобразить пользователю. Записать котировки в локальную БД SQLite3, и в дальнейшем при повторе ввода загружать котировки из БД и идти на сайт только за новыми данными.
+Задача в том, чтобы достать котировки валют с сайта ЦБ РФ, отобразить пользователю. Записать котировки в локальную БД SQLite3, и в дальнейшем при повторе ввода загружать котировки из БД, и идти на сайт только за новыми данными.
 
 Интересно, что в этом учебном проекте я уже сделал загрузку по http, парсинг и составление URL, парсинг XML документа через DOM модель (попробовал и stream). Проектирование GUI с нуля, формы, кнопки, обработка - валидация ввода.
 Сейчас дописываю чтение - запись - выборки SQL запросами из БД SQLite3. Основные функции реализованы. На удивление легко построилась реляционная модель БД, правда не силами Qt, а мощью SQL92. Очень помогло, что на сайте http://www.sql-ex.ru/ решил первые 30 задач на SQL.

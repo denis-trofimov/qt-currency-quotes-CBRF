@@ -1,4 +1,5 @@
 #include "Gui.h"
+#include <assert.h>
 
 // ----------------------------------------------------------------------
 Gui::Gui(QWidget* pwgt /*=0*/) : QWidget(pwgt)
@@ -28,7 +29,7 @@ Gui::Gui(QWidget* pwgt /*=0*/) : QWidget(pwgt)
 
     QGroupBox* urlGroup = new QGroupBox(
                 tr("Адрес для получения котировок на день"));
-    goButton = new QPushButton(tr("Скачать"));
+    goButton = new QPushButton(tr("Обновить"));
     QString strDownloadLink = "http://www.cbr.ru/scripts/XML_daily.asp";
     urlLineEdit = new QLineEdit(strDownloadLink);
 //    urlLineEdit->setReadOnly(true);
