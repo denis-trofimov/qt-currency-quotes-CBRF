@@ -1,17 +1,21 @@
-# Qt app for getting currency quotes Bank XML service.
+# Qt app for getting currency quotes from Central Bank of Russian Fedderation
 
 This application gets currency quotes from Central Bank of Russian Fedderation site.
 URLs like "http://www.cbr.ru/scripts/XML_daily.asp?" are processed.
-New: it now stores quotes in local database SQLite.
-New: Debian 8 compatible binary.
-TODO: win32 cross compile.
+It now stores quotes in local database SQLite.
+Have I18n files, English translation default, English source code.
+Have win32 Windows binary ready to deploy 7z packed.
+
+![windows 7 qt-currency-quotes-cbrf](https://cloud.githubusercontent.com/assets/24657082/22822539/edddaa08-ef90-11e6-8c84-373d12d34467.png)
+
+Have Debian 8 compatible binary, no package yet.
+
+TODO: static linking
 TODO: Foreign Currency Market Reference
-TODO: I18n files
-TODO: English translation
 
 Copyright 2017 Denis Trofimov <silaradost@yandex.ru>
 
-Main widget.
+Main widget Debian 8
 
 ![2017-02-07 22 04 42](https://cloud.githubusercontent.com/assets/24657082/22707435/36c6ad70-ed8c-11e6-929a-38adca182511.png)
 
