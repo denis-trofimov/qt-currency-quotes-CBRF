@@ -2,32 +2,27 @@
 
 This application gets currency quotes from Central Bank of Russian Fedderation site.
 URLs like "http://www.cbr.ru/scripts/XML_daily.asp?" are processed.
-It now stores quotes in local database SQLite.
-Have I18n files, English translation default, English source code.
-Have win32 Windows binary ready to deploy 7z packed.
+* It now stores quotes in local database SQLite.
+* Have I18n files, English translation default, English source code.
 
+* Have Debian 8 compatible binary, no package yet.
+
+Debian 8 32 screenshot.
+![2017-02-13 01 01 53](https://cloud.githubusercontent.com/assets/24657082/22866479/bc88ba22-f190-11e6-9246-eba55d4a248f.png) | ![2017-02-13 01 10 17_0 2-beta3_en_ru](https://cloud.githubusercontent.com/assets/24657082/22866543/b777fa7e-f191-11e6-963c-f9eb2f06bead.png)
+
+* Have win32 Windows binary 7z packed. Ready to deploy, unpack with 7z and run.
+
+Windows 7 32 screenshot.
 ![windows 7 qt-currency-quotes-cbrf](https://cloud.githubusercontent.com/assets/24657082/22822539/edddaa08-ef90-11e6-8c84-373d12d34467.png)
-
-Have Debian 8 compatible binary, no package yet.
 
 TODO: static linking
 TODO: Foreign Currency Market Reference
 
-Copyright 2017 Denis Trofimov <silaradost@yandex.ru>
+With all due respect thanks to Max Schlee <Max.Schlee@neonway.com> as a great teacher.
+My project uses code of tutorial projects XmlDOMRead, DownloaderGui from the
+book "Qt 5.3 Professional programming with C++" by Max Schlee .
 
-Main widget Debian 8
-
-![2017-02-07 22 04 42](https://cloud.githubusercontent.com/assets/24657082/22707435/36c6ad70-ed8c-11e6-929a-38adca182511.png)
-
-Tables for inspecting model/view of SQLite.
-
-![2017-02-07 22 05 09](https://cloud.githubusercontent.com/assets/24657082/22707436/36c754aa-ed8c-11e6-828d-46c199ed6de7.png)
-
-![2017-02-07 22 05 34](https://cloud.githubusercontent.com/assets/24657082/22707437/36c9dad6-ed8c-11e6-8c5f-feaac7dbcacb.png)
-
-Uses code of tutorial projects XmlDOMRead, DownloaderGui from the
-book "Qt 5.3 Professional programming with C++" by Max Schlee <Max.Schlee@neonway.com> .
-With all due respect thanks to Max Schlee as a great teacher.
+####### Below old text from one letter.
 
 Проект дал мне возможный работодатель как тест Qt C++. Поскольку мне интересно овладеть Qt, взялся с интересом.
 
