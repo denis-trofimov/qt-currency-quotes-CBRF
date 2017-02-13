@@ -3,7 +3,7 @@
 This application gets currency quotes from Central Bank of Russian Fedderation site.
 URLs like "http://www.cbr.ru/scripts/XML_daily.asp?" are processed.
 * It now stores quotes in local database SQLite.
-* Have I18n files, English translation default, English source code.
+* I18n: system locale dependent UI, english default, russian secondary.
 
 * Have Debian 8 compatible binary, no package yet.
 
