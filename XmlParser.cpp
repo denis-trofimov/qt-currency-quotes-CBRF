@@ -110,9 +110,16 @@ void XmlParser::traverseNode(const QDomNode& node)
     }
 }
 
+/*!
+Копирует содержимое из исходной области памяти в целевую область память
+\param[out] dest Целевая область памяти
+\param[in] src Исходная область памяти
+\param[in] n Количество байтов, которые необходимо скопировать
+*/
 // ----------------------------------------------------------------------
-void XmlParser::getCurrencyByCode(const QByteArray & data)
+void XmlParser::parseDailyQuotes(const QByteArray & data, const QString& code)
 {
+    setCurrencyName(code);
     QDomDocument domDoc;
     bool namespaceProcessing = false;
     errorMsg = new QString("");
@@ -141,12 +148,4 @@ void XmlParser::getCurrencyByCode(const QByteArray & data)
         emit error(*errorMsg + "in the line number " + *errorLine +
                    " in the column number " + *errorColumn);
     }
-}
-
-// ----------------------------------------------------------------------
-XmlParser::XmlParser(QObject* pobj,
-                     const QString& curCode)
-    : QObject(pobj), currencyCode(curCode)
-{
-    currencyCode = curCode;
 }

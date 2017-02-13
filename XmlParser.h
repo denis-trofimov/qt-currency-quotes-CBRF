@@ -53,7 +53,7 @@ private:
     QString* errorMsg;
 
 public:
-    XmlParser(QObject* pobj = 0, const QString& curCode = QString("USD"));
+    XmlParser(QObject* pobj = 0) : QObject(pobj) {}
 
 signals:
     void error(const QString&);
@@ -63,7 +63,7 @@ signals:
 
 public slots:
     void setCurrencyName(const QString&);
-    void getCurrencyByCode(const QByteArray&);
+    void parseDailyQuotes(const QByteArray&, const QString&);
 };
 
 #endif // XMLCURRENCYREADER_H

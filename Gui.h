@@ -84,7 +84,7 @@ public:
     Gui(QWidget* pwgt = 0);
 
 signals:
-    void loadedXml           (const QByteArray&             );
+    void loadedXml(const QByteArray&, const QString&);
 
 private slots:
     void slotGo              (                              );

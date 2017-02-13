@@ -118,7 +118,7 @@ Gui::Gui(QWidget* pwgt /*=0*/) : QWidget(pwgt)
     connect(downloaderObject, &Downloader::error,
             this, &Gui::slotError);
 
-    xmlParserObject = new XmlParser(this, currencyCode);
+    xmlParserObject = new XmlParser(this);
     connect(currencyCodeLineEdit, &QLineEdit::textEdited,
             xmlParserObject, &XmlParser::setCurrencyName
             );
@@ -126,7 +126,7 @@ Gui::Gui(QWidget* pwgt /*=0*/) : QWidget(pwgt)
             xmlParserObject, &XmlParser::setCurrencyName
             );
     connect(this, &Gui::loadedXml,
-            xmlParserObject, &XmlParser::getCurrencyByCode
+            xmlParserObject, &XmlParser::parseDailyQuotes
             );
     connect(xmlParserObject, &XmlParser::parseSucces,
             this, &Gui::slotParseSucces
@@ -203,7 +203,7 @@ void Gui::slotDownloadProgress(qint64 nReceived, qint64 nTotal)
 void Gui::slotDone(const QUrl& url, const QByteArray& ba)
 {
     //TODO rewrite with lambda
-    emit loadedXml(ba);
+    emit loadedXml(ba, currencyCodeLineEdit->text());
     //    QString strFileName = url.path().section('/', -1);
 }
 
