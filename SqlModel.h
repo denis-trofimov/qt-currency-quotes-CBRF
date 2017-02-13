@@ -1,7 +1,17 @@
 /* -*- coding: utf-8 -*-
 * Copyright 2017 Denis Trofimov <silaradost@yandex.ru>
 * All Rights Reserved.
-*
+* ========================================================================
+* Author's social contacts
+* ------------------------------------------------------------------------
+* FaceBook | http://www.facebook.com/denis.trofimov
+* Twitter  | http://twitter.com/yalyubim
+* StackOverflow | http://stackoverflow.com/users/7388116/denis-trofimov
+* UpWork   | https://www.upwork.com/o/profiles/users/_~01794189f31303086e/
+* vk.com   | http://vk.com/denis.trofimov
+* Skype    | ilikemy.self
+* LinkedIn | http://www.linkedin.com/in/denis-trofimov-27713b46
+* ========================================================================
 * This program is free software; you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
 * the Free Software Foundation; either version 3, 29 June 2007
