@@ -116,7 +116,7 @@ SqlModel::SqlModel(QWidget *parent) :
     QWidget(parent)
 {
     parentWidget = parent; //to pass pointer in View
-    QLocale::setDefault(QLocale::Russian);
+//    QLocale::setDefault(QLocale::Russian);
 //    if(slotCreateConnection())
 //        qDebug() << "Database and tables opened";
 }

@@ -79,9 +79,13 @@ private:
     QDate date;
     QString nominal;
     QString name;
+    bool downloadingQuotes = false;
+    bool downloadingLib = false;
 
 public:
     Gui(QWidget* pwgt = 0);
+
+    QString getLocalQuotesURL();
 
 signals:
     void loadedXml(const QByteArray&, const QString&);
@@ -89,12 +93,14 @@ signals:
 private slots:
     void slotGo              (                              );
     void slotDownloadProgress(qint64, qint64                );
-    void slotDone            (const QUrl&, const QByteArray&);
+    void slotDownloadDone            (const QUrl&, const QByteArray&);
     void slotError           (const QString& errorMessage =
             "An error while download is occured");
 //    void slotError           (               );
     void slotParseSucces(const QString& valueParsed,
                          const QString& nominalParsed,
                          const QString& nameParsed);
+    void slotShadowUpdateQuotesLibrary();
+
 };
 

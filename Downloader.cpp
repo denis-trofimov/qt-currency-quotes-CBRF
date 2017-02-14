@@ -31,13 +31,14 @@ Downloader::Downloader(QObject* pobj/*=0*/) : QObject(pobj)
 }
 
 // ----------------------------------------------------------------------
-void Downloader::download(const QUrl& url)
+void Downloader::download(const QUrl& url, bool showProgress)
 {
     QNetworkRequest request(url);
     QNetworkReply*  pnr = m_pnam->get(request);
-    connect(pnr, SIGNAL(downloadProgress(qint64, qint64)), 
-            this, SIGNAL(downloadProgress(qint64, qint64))
-           );
+    if(showProgress)
+        connect(pnr, SIGNAL(downloadProgress(qint64, qint64)),
+                this, SIGNAL(downloadProgress(qint64, qint64))
+                );
 }
 
 // ----------------------------------------------------------------------

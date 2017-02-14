@@ -62,9 +62,9 @@ signals:
                          const QString& nameParsed);
 
 public slots:
-    void setCurrencyName(const QString&);
-    void parseDailyQuotes(const QByteArray&, const QString&);
-
+    void slotSetCurrencyName(const QString&);
+    void slotParseDailyQuotes(const QByteArray&, const QString&);
+    void slotParseDailyQuotesLib(const QByteArray&, const QByteArray&);
 };
 
 #endif // XMLCURRENCYREADER_H

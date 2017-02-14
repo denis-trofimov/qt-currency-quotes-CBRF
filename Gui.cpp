@@ -29,10 +29,27 @@
 */
 
 
+
 #include "Gui.h"
 #include <assert.h>
 
-// ----------------------------------------------------------------------
+
+/*!
+ * \brief Gui::getLocalQuotesURL gets locale dependent (en|ru) URL to daily quotes
+ * \return URL to daily quotes
+ */
+QString Gui::getLocalQuotesURL()
+{
+    if(QLocale::system().language() == QLocale::Russian)
+        return QString("http://www.cbr.ru/scripts/XML_daily.asp");
+    else
+        return QString("http://www.cbr.ru/scripts/XML_daily_eng.asp");
+}
+
+/*!
+ * \brief Gui::Gui Shows main window QWidget
+ * \param[in] pwgt parent widget
+ */
 Gui::Gui(QWidget* pwgt /*=0*/) : QWidget(pwgt)
 {
     currencyCode = "USD";
@@ -61,8 +78,8 @@ Gui::Gui(QWidget* pwgt /*=0*/) : QWidget(pwgt)
     QGroupBox* urlGroup = new QGroupBox(
                 tr("URL address to get daily quotes"));
     goButton = new QPushButton(tr("Update"));
-    QString strDownloadLink = "http://www.cbr.ru/scripts/XML_daily.asp";
-    urlLineEdit = new QLineEdit(strDownloadLink);
+
+    urlLineEdit = new QLineEdit(getLocalQuotesURL());
 //    urlLineEdit->setReadOnly(true);
     downProgressBar  = new QProgressBar;
 
@@ -113,20 +130,20 @@ Gui::Gui(QWidget* pwgt /*=0*/) : QWidget(pwgt)
             this,  SLOT(slotDownloadProgress(qint64, qint64))
            );
     connect(downloaderObject, SIGNAL(done(const QUrl&, const QByteArray&)),
-            this,  SLOT(slotDone(const QUrl&, const QByteArray&))
+            this,  SLOT(slotDownloadDone(const QUrl&, const QByteArray&))
            );
     connect(downloaderObject, &Downloader::error,
             this, &Gui::slotError);
 
     xmlParserObject = new XmlParser(this);
     connect(currencyCodeLineEdit, &QLineEdit::textEdited,
-            xmlParserObject, &XmlParser::setCurrencyName
+            xmlParserObject, &XmlParser::slotSetCurrencyName
             );
     connect(currencyCodeLineEdit, &QLineEdit::textChanged,
-            xmlParserObject, &XmlParser::setCurrencyName
+            xmlParserObject, &XmlParser::slotSetCurrencyName
             );
     connect(this, &Gui::loadedXml,
-            xmlParserObject, &XmlParser::parseDailyQuotes
+            xmlParserObject, &XmlParser::slotParseDailyQuotes
             );
     connect(xmlParserObject, &XmlParser::parseSucces,
             this, &Gui::slotParseSucces
@@ -200,11 +217,23 @@ void Gui::slotDownloadProgress(qint64 nReceived, qint64 nTotal)
 }
 
 // ----------------------------------------------------------------------
-void Gui::slotDone(const QUrl& url, const QByteArray& ba)
+void Gui::slotDownloadDone(const QUrl& url, const QByteArray& ba)
 {
+    QString strFileName = url.path().section('/', -1);
+    QFile   file(strFileName);
+    if (file.open(QIODevice::WriteOnly)) {
+        file.write(ba);
+        file.close();
+    }
     //TODO rewrite with lambda
-    emit loadedXml(ba, currencyCodeLineEdit->text());
-    //    QString strFileName = url.path().section('/', -1);
+    if(downloadingQuotes || downloadingLib)
+    {
+        slotShadowUpdateQuotesLibrary();
+    }
+    else
+    {
+        emit loadedXml(ba, currencyCodeLineEdit->text());
+    }
 }
 
 // ----------------------------------------------------------------------
@@ -239,4 +268,56 @@ void Gui::slotParseSucces(const QString& valueParsed,
                               date,
                               nameParsed,
                               nominalParsed);
+}
+
+
+void Gui::slotShadowUpdateQuotesLibrary()
+{
+
+    QUrl url = QUrl("http://www.cbr.ru/scripts/XML_valFull.asp");
+    QString strFileName = url.path().section('/', -1);
+    QFile fileLib(strFileName);
+    if(!fileLib.exists() || (fileLib.size() == 0))
+    {
+        downloaderObject->download(url, false);
+        downloadingLib = true;
+        return;
+    }
+    else
+        downloadingLib = false;
+
+    url = QUrl(getLocalQuotesURL());
+    strFileName = url.path().section('/', -1);
+    QFile fileQuotes(strFileName);
+    if(!fileQuotes.exists() || (fileQuotes.size() == 0))
+    {
+        downloaderObject->download(url);
+        downloadingQuotes = true;
+        return;
+    }
+    else
+        downloadingQuotes = false;
+
+    QByteArray contentsLib, contentsQuotes;
+    if(fileLib.open(QIODevice::ReadOnly)) {
+        contentsLib = fileLib.readAll();
+        fileLib.close();
+    }
+    if(fileLib.open(QIODevice::ReadOnly)) {
+        contentsLib = fileLib.readAll();
+        fileLib.close();
+    }
+
+
+    QString strXQuery = ""
+            "declare variable $lib external;"
+            "declare variable $quotes external;"
+            "for $x in fn:doc($inputDocument)/addressbook/contact/name"
+            where data($x) = "Kermit"
+            order by $x
+            return data($x)
+
+            ";
+
+
 }

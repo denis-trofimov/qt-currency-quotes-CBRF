@@ -36,7 +36,7 @@ private:
 public:
     Downloader(QObject* pobj = 0);
 
-    void download(const QUrl&);
+    void download(const QUrl&, bool showProgress = true);
 
 signals:
     void downloadProgress(qint64, qint64                );

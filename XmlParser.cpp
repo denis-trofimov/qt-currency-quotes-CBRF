@@ -39,7 +39,7 @@
 
 #include "XmlParser.h"
 
-void XmlParser::setCurrencyName(const QString& name)
+void XmlParser::slotSetCurrencyName(const QString& name)
 {
     currencyCode = name;
 }
@@ -112,10 +112,11 @@ void XmlParser::traverseNode(const QDomNode& node)
 
 /*!
 Parses XML file with daily quotes
-\param[in] data XML file contents in raw bytes
-\param[in] code Currency code like "USD"
+\param[in] data daily quotes XML file contents in raw bytes
+\param[in] code currency code like "USD"
 
-Example of XML file:
+Example of daily quotes XML file at URL:
+http://www.cbr.ru/scripts/XML_daily_eng.asp?date_req=22/01/2007
 
 \code xml
 <?xml version="1.0" encoding="windows-1252" ?>
@@ -131,9 +132,9 @@ Example of XML file:
 \endcode
 */
 // ----------------------------------------------------------------------
-void XmlParser::parseDailyQuotes(const QByteArray & data, const QString& code)
+void XmlParser::slotParseDailyQuotes(const QByteArray & data, const QString& code)
 {
-    setCurrencyName(code);
+    slotSetCurrencyName(code);
     QDomDocument domDoc;
     bool namespaceProcessing = false;
     errorMsg = new QString("");
@@ -162,4 +163,48 @@ void XmlParser::parseDailyQuotes(const QByteArray & data, const QString& code)
         emit error(*errorMsg + "in the line number " + *errorLine +
                    " in the column number " + *errorColumn);
     }
+}
+
+/*!
+Parses two XML files at once with FCM daily quotes and library
+\param[in] quotesQByteArray Daily quotes XML file contents
+\param[in] libQByteArray library XML file contents
+
+Example of daily quotes XML file at URL:
+http://www.cbr.ru/scripts/XML_daily_eng.asp?date_req=22/01/2007
+
+\code xml
+<?xml version="1.0" encoding="windows-1252" ?>
+<ValCurs Date="20.01.2007" name="Foreign Currency Market">
+<Valute ID="R01010">
+    <NumCode>036</NumCode>
+    <CharCode>AUD</CharCode>
+    <Nominal>1</Nominal>
+    <Name>Australian Dollar</Name>
+    <Value>20,9568</Value>
+</Valute>
+</ValCurs>
+\endcode
+
+Example of library XML file at URL:
+http://www.cbr.ru/scripts/XML_valFull.asp
+
+\code xml
+<?xml version="1.0" encoding="windows-1251" ?>
+<Valuta name="Foreign Currency Market Lib">
+<Item ID="R01500">
+    <Name>Молдавский лей</Name>
+    <EngName>Moldova Lei</EngName>
+    <Nominal>10</Nominal>
+    <ParentCode>R01500    </ParentCode>
+    <ISO_Num_Code>498</ISO_Num_Code>
+    <ISO_Char_Code>MDL</ISO_Char_Code>
+</Item>
+\endcode
+*/
+// ----------------------------------------------------------------------
+void XmlParser::slotParseDailyQuotesLib(const QByteArray& quotesQByteArray,
+                         const QByteArray& libQByteArray)
+{
+
 }
