@@ -111,10 +111,24 @@ void XmlParser::traverseNode(const QDomNode& node)
 }
 
 /*!
-Копирует содержимое из исходной области памяти в целевую область память
-\param[out] dest Целевая область памяти
-\param[in] src Исходная область памяти
-\param[in] n Количество байтов, которые необходимо скопировать
+Parses XML file with daily quotes
+\param[in] data XML file contents in raw bytes
+\param[in] code Currency code like "USD"
+
+Example of XML file:
+
+\code xml
+<?xml version="1.0" encoding="windows-1252" ?>
+<ValCurs Date="20.01.2007" name="Foreign Currency Market">
+<Valute ID="R01010">
+    <NumCode>036</NumCode>
+    <CharCode>AUD</CharCode>
+    <Nominal>1</Nominal>
+    <Name>Australian Dollar</Name>
+    <Value>20,9568</Value>
+</Valute>
+</ValCurs>
+\endcode
 */
 // ----------------------------------------------------------------------
 void XmlParser::parseDailyQuotes(const QByteArray & data, const QString& code)

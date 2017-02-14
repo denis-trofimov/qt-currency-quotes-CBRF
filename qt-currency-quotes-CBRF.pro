@@ -46,7 +46,11 @@ OTHER_FILES += \
     LICENSE \
     xml_examples/XML_daily.asp \
     xml_examples/XML_val.asp \
-    queries.sql
+    queries.sql \
+    xml_examples/XML_daily_eng.xml \
+    xml_examples/XML_valFull.xml \
+    xml_examples/XML_daily.xml \
+    xml_examples/XML_val.xml
 
 TRANSLATIONS = qt-currency-quotes-CBRF_ru.ts qt-currency-quotes-CBRF_en.ts
 QMAKE_PRE_LINK += lrelease $$_PRO_FILE_

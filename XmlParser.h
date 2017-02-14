@@ -64,6 +64,7 @@ signals:
 public slots:
     void setCurrencyName(const QString&);
     void parseDailyQuotes(const QByteArray&, const QString&);
+
 };
 
 #endif // XMLCURRENCYREADER_H
