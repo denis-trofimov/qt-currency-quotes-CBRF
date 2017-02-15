@@ -1,0 +1,79 @@
+Получение данных, используя XML
+
+Example 1
+Например, для получения котировок на заданный день
+www.cbr.ru/scripts/XML_daily.asp?date_req=02/03/2002
+    date_req= Date of query (dd/mm/yyyy)
+* если параметр(date_req) отсутствует, то Вы получите документ на последнюю зарегистрированную дату.
+-- Справочник по кодам валют: www.cbr.ru/scripts/XML_val.asp?d=0
+   (XML_valFull.asp список включающий ISO коды валют)
+    d=0 Коды валют устанавливаемые ежедневно.
+    d=1 Коды валют устанавливаемые ежемесячно.
+www.cbr.ru/scripts/XML_daily.asp?date_req=02/03/2002&d=1 - котировки валют устанавливаемые ежемесячно (устарело).
+Aнгл. версия:
+www.cbr.ru/scripts/XML_daily_eng.asp?date_req=22/01/2007
+www.cbr.ru/scripts/XML_daily_eng.asp?date_req=01/01/2007&d=1
+
+  Об изменении даты вступления в силу Приказа Банка России о курсах иностранных валют, устанавливаемых Банком России ежемесячно
+
+
+Example 2
+Пример получения динамики котировок доллара США:
+www.cbr.ru/scripts/XML_dynamic.asp?date_req1=02/03/2001&date_req2=14/03/2001&VAL_NM_RQ=R01235
+    date_req1 - date_req2 =   Date range
+    VAL_NM_RQ - unique code (you can get this code from Example 1)
+
+Example 3
+Пример получения динамики сведений об остатках средств на корреспондентских счетах кредитных организаций
+    date_req1 - date_req2 = Date range
+    /www.cbr.ru/scripts/XML_ostat.asp?date_req1=01/06/2001&date_req2=05/06/2001
+
+
+Example 4
+Пример получения динамики котировок драгоценных металлов
+    date_req1 - date_req2 = Date range
+    /www.cbr.ru/scripts/xml_metall.asp?date_req1=01/07/2001&date_req2=13/07/2001
+ВНИМАНИЕ c 01.07.2008 дата установления цены является действующей, до 01.07.2008 - датой установления.
+
+
+Example 5
+Пример получения динамики ставок межбанковского рынка
+    date_req1 - date_req2 = Date range
+    www.cbr.ru/scripts/xml_mkr.asp?date_req1=01/07/2001&date_req2=13/07/2001
+
+Example 6
+Пример получения динамики ставок привлечения средств по депозитным операциям Банка России на денежном рынке
+
+    date_req1 - date_req2 = Date range
+    www.cbr.ru/scripts/xml_depo.asp?date_req1=01/07/2001&date_req2=13/07/2001
+
+Example 7
+Получение новостей сервера
+    www.cbr.ru/scripts/XML_News.asp
+
+Example 8
+Получение соответствия названий кредитных организаций кодам BIC (9 знаков)
+    www.cbr.ru/scripts/XML_bic.asp?name=АВТО&bic=044525774,
+где:
+bic - код кредитной организации (9 знаков)
+name - название (часть названия) кредитной организации
+* Вы можете указать какой - либо один или оба параметра.
+Если оба параметра отсутствуют, тогда Вы получите полный список соответствия названий кредитных организации и кодов BIC.
+
+Example 9
+Пример получения динамики ставок "валютный своп" - " Валютный своп buy/sell overnight "
+    date_req1 - date_req2 = Date range
+    www.cbr.ru/scripts/xml_swap.asp?date_req1=01/12/2002&date_req2=06/12/2002
+
+Example 10
+Пример получения динамики отпускных цен Банка России на инвестиционные монеты
+    date_req1 - date_req2 = Date range
+    www.cbr.ru/scripts/XMLCoinsBase.asp?date_req1=01/12/2005&date_req2=06/12/2005
+
+    Простые примеры получения данных на MS Visual Basic (в примере использована SoapToolkit 3.0 и Xml sdk от Microsoft)
+
+     	Простое получение валюты (ProjectXML.vbp)
+     	Получение динамики валюты и экспорт в Excel файл(ProjectXMLDynamic.vbp)
+    usd_cbr_php.zip  Примеры получения курса доллара, используя PHP4 (unix, windows) в виде графического информера.
+
+По вопросам импорта данных: piter@mail.cbr.ru
