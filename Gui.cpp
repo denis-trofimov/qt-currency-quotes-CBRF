@@ -313,11 +313,8 @@ void Gui::slotShadowUpdateQuotesLibrary()
             "declare variable $lib external;"
             "declare variable $quotes external;"
             "for $x in fn:doc($inputDocument)/addressbook/contact/name"
-            where data($x) = "Kermit"
-            order by $x
-            return data($x)
-
-            ";
-
-
+            "where data($x) = ''Kermit''"
+            "order by $x"
+            "return data($x)"
+            ";"
 }
