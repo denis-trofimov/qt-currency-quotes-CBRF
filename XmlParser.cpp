@@ -203,8 +203,43 @@ http://www.cbr.ru/scripts/XML_valFull.asp
 \endcode
 */
 // ----------------------------------------------------------------------
-void XmlParser::slotParseDailyQuotesLib(const QByteArray& quotesQByteArray,
-                         const QByteArray& libQByteArray)
+void XmlParser::slotParseDailyQuotesLib(const QByteArray* libQByteArray,
+                                        const QByteArray* quotesQByteArray
+                                        QString* )
 {
+    QString strXQuery =
+            "declare variable $lib external;"
+            "declare variable $quotes external;"
+            "<library>"
+            "{"
+            "for $v in fn:doc($quotes)/ValCurs/Valute,"
+            "for $i in fn:doc($lib)/Valuta/Item[@ID/data() = $v/@ID/data()]"
+            "return"
+            "<item>"
+            "{"
+            "$i/ISO_Num_Code,"
+            "$i/ISO_Char_Code,"
+            "$i/EngName,"
+            "$i/Name,"
+            "$i/Nominal,"
+            "$v/Value"
+            "}"
+            "</item>"
+            "}"
+            "</library>";
+    const QBuffer libBuffer = new QBuffer(libQByteArray);
+    const QBuffer quotesBuffer = new QBuffer(quotesQByteArray);
+    QXmlQuery query;
+    query.bindVariable("lib", libBuffer);
+    query.setQuery(strXQuery);
+    if (!query.isValid()) {
+        qDebug() << "The query is invalid";
 
+    }
+    QString *strOutput = new QString();
+    if (!query.evaluateTo(strOutput)) {
+        qDebug() << "Can't evaluate the query";
+    }
 }
+
+

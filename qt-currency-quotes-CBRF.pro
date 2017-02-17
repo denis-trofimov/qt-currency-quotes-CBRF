@@ -30,7 +30,7 @@
 
 
 TEMPLATE     = app
-QT          += widgets network xml sql
+QT          += widgets network xml sql xmlpatterns
 SOURCES      = main.cpp \
                Downloader.cpp \
                Gui.cpp \
@@ -44,9 +44,6 @@ HEADERS      = Downloader.h \
 OTHER_FILES += \
     README.md \
     LICENSE \
-    xml_examples/XML_daily.asp \
-    xml_examples/XML_val.asp \
-    queries.sql \
     xml_examples/XML_daily_eng.xml \
     xml_examples/XML_valFull.xml \
     xml_examples/XML_daily.xml \

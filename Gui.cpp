@@ -54,6 +54,8 @@ Gui::Gui(QWidget* pwgt /*=0*/) : QWidget(pwgt)
 {
     currencyCode = "USD";
     date = (QDate().currentDate()).addDays(1);
+    QByteArray* libByteArray = new QByteArray();
+    QByteArray* quotesByteArray = new QByteArray();
 
     QGroupBox* settingsGroup = new QGroupBox(tr("Settings"));
 
@@ -270,51 +272,54 @@ void Gui::slotParseSucces(const QString& valueParsed,
                               nominalParsed);
 }
 
-
+/*!
+ * \brief Gui::slotShadowUpdateQuotesLibrary Populates library and quotes in DB.
+ */
 void Gui::slotShadowUpdateQuotesLibrary()
 {
-
-    QUrl url = QUrl("http://www.cbr.ru/scripts/XML_valFull.asp");
-    QString strFileName = url.path().section('/', -1);
-    QFile fileLib(strFileName);
-    if(!fileLib.exists() || (fileLib.size() == 0))
+    if(libByteArray->isNull() || libByteArray->isEmpty())
     {
-        downloaderObject->download(url, false);
-        downloadingLib = true;
-        return;
-    }
-    else
-        downloadingLib = false;
+        QUrl url = QUrl("http://www.cbr.ru/scripts/XML_valFull.asp");
+        QString strFileName = url.path().section('/', -1);
+        QFile fileLib(strFileName);
+        if(!fileLib.exists() || (fileLib.size() == 0))
+        {
+            downloaderObject->download(url, false);
+            downloadingLib = true;
 
-    url = QUrl(getLocalQuotesURL());
-    strFileName = url.path().section('/', -1);
-    QFile fileQuotes(strFileName);
-    if(!fileQuotes.exists() || (fileQuotes.size() == 0))
+        }
+        else
+        {
+            if(fileLib.open(QIODevice::ReadOnly)) {
+                *libByteArray = fileLib.readAll();
+                fileLib.close();
+            }
+            downloadingLib = false;
+        }
+    }
+    if(quotesByteArray->isNull() || quotesByteArray->isEmpty())
     {
-        downloaderObject->download(url);
-        downloadingQuotes = true;
-        return;
+        QUrl url = QUrl(getLocalQuotesURL());
+        QString strFileName = url.path().section('/', -1);
+        QFile fileQuotes(strFileName);
+        if(!fileQuotes.exists() || (fileQuotes.size() == 0))
+        {
+            downloaderObject->download(url, false);
+            downloadingQuotes = true;
+            return;
+        }
+        else
+        {
+            if(fileQuotes.open(QIODevice::ReadOnly)) {
+                *quotesByteArray = fileQuotes.readAll();
+                fileQuotes.close();
+            }
+            downloadingQuotes = false;
+        }
     }
-    else
-        downloadingQuotes = false;
 
-    QByteArray contentsLib, contentsQuotes;
-    if(fileLib.open(QIODevice::ReadOnly)) {
-        contentsLib = fileLib.readAll();
-        fileLib.close();
-    }
-    if(fileLib.open(QIODevice::ReadOnly)) {
-        contentsLib = fileLib.readAll();
-        fileLib.close();
-    }
-
-
-    QString strXQuery = ""
-            "declare variable $lib external;"
-            "declare variable $quotes external;"
-            "for $x in fn:doc($inputDocument)/addressbook/contact/name"
-            "where data($x) = ''Kermit''"
-            "order by $x"
-            "return data($x)"
-            ";"
+    if(!libByteArray->isNull() && !libByteArray->isEmpty()
+            && !quotesByteArray->isNull() && !quotesByteArray->isEmpty())
+        emit downloadedLibAndQuotes(libByteArray, quotesByteArray);
+    return;
 }

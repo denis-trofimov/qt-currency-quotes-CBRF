@@ -37,6 +37,7 @@
 #include <QObject>
 #include <QtXml>
 #include <QDebug>
+#include <QtXmlPatterns>
 
 
 class QXmlStreamReader;
@@ -64,7 +65,7 @@ signals:
 public slots:
     void slotSetCurrencyName(const QString&);
     void slotParseDailyQuotes(const QByteArray&, const QString&);
-    void slotParseDailyQuotesLib(const QByteArray&, const QByteArray&);
+    void slotParseDailyQuotesLib(const QByteArray *, const QByteArray *);
 };
 
 #endif // XMLCURRENCYREADER_H

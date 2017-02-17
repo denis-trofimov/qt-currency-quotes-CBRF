@@ -79,8 +79,11 @@ private:
     QDate date;
     QString nominal;
     QString name;
-    bool downloadingQuotes = false;
-    bool downloadingLib = false;
+    bool downloadingQuotes;
+    bool downloadingLib;
+
+    QByteArray* libByteArray;
+    QByteArray* quotesByteArray;
 
 public:
     Gui(QWidget* pwgt = 0);
@@ -89,6 +92,8 @@ public:
 
 signals:
     void loadedXml(const QByteArray&, const QString&);
+    void downloadedLibAndQuotes(const QByteArray* libByteArray,
+                                const QByteArray* quotesByteArray);
 
 private slots:
     void slotGo              (                              );
