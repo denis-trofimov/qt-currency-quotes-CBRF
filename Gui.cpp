@@ -221,15 +221,23 @@ void Gui::slotDownloadProgress(qint64 nReceived, qint64 nTotal)
 // ----------------------------------------------------------------------
 void Gui::slotDownloadDone(const QUrl& url, const QByteArray& ba)
 {
-    QString strFileName = url.path().section('/', -1);
-    QFile   file(strFileName);
-    if (file.open(QIODevice::WriteOnly)) {
-        file.write(ba);
-        file.close();
-    }
     //TODO rewrite with lambda
     if(downloadingQuotes || downloadingLib)
     {
+        QString strFileName = url.path().section('/', -1);
+        QFile   file(strFileName);
+        if (file.open(QIODevice::WriteOnly)) {
+            file.write(ba);
+            file.close();
+        }
+        if(downloadingQuotes && strFileName.contains("XML_daily"))
+        {
+            quotesByteArray = &ba;
+        }
+        if(downloadingLib && strFileName.contains("XML_valFull.asp"))
+        {
+            libByteArray = &ba;
+        }
         slotShadowUpdateQuotesLibrary();
     }
     else

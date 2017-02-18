@@ -82,8 +82,8 @@ private:
     bool downloadingQuotes;
     bool downloadingLib;
 
-    QByteArray* libByteArray;
-    QByteArray* quotesByteArray;
+    const QByteArray* libByteArray;
+    const QByteArray* quotesByteArray;
 
 public:
     Gui(QWidget* pwgt = 0);

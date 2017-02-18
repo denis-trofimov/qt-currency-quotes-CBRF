@@ -71,7 +71,8 @@ public slots:
                                QString &name);
     void slotView();
 //    void isValidCurrencyLib();
-//    void setCurrencyLib(const QByteArray&, const QByteArray&);
+    void slotSetCurrencyLib(const QString* strLibQuotes,
+                            const QDate &date);
     //bool slotReadLib(QSqlTableModel&) = 0;
 };
 

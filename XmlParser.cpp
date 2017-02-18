@@ -169,6 +169,7 @@ void XmlParser::slotParseDailyQuotes(const QByteArray & data, const QString& cod
 Parses two XML files at once with FCM daily quotes and library
 \param[in] quotesQByteArray Daily quotes XML file contents
 \param[in] libQByteArray library XML file contents
+\param[out] strOutput Semicolon separated result with lib and quotes
 
 Example of daily quotes XML file at URL:
 http://www.cbr.ru/scripts/XML_daily_eng.asp?date_req=22/01/2007
@@ -204,41 +205,55 @@ http://www.cbr.ru/scripts/XML_valFull.asp
 */
 // ----------------------------------------------------------------------
 void XmlParser::slotParseDailyQuotesLib(const QByteArray* libQByteArray,
-                                        const QByteArray* quotesQByteArray
-                                        QString* )
+                                        const QByteArray* quotesQByteArray,
+                                        QString* strOutput)
 {
+//    QString strXQuery =
+//            "declare variable $lib external;"
+//            "declare variable $quotes external;"
+//            "<library>"
+//            "{"
+//            "for $v in fn:doc($quotes)/ValCurs/Valute,"
+//            "for $i in fn:doc($lib)/Valuta/Item[@ID/data() = $v/@ID/data()]"
+//            "return"
+//            "<item>"
+//            "{"
+//            "$i/ISO_Num_Code,"
+//            "$i/ISO_Char_Code,"
+//            "$i/EngName,"
+//            "$i/Name,"
+//            "$i/Nominal,"
+//            "$v/Value"
+//            "}"
+//            "</item>"
+//            "}"
+//            "</library>";
+
     QString strXQuery =
             "declare variable $lib external;"
             "declare variable $quotes external;"
-            "<library>"
-            "{"
             "for $v in fn:doc($quotes)/ValCurs/Valute,"
             "for $i in fn:doc($lib)/Valuta/Item[@ID/data() = $v/@ID/data()]"
             "return"
-            "<item>"
-            "{"
-            "$i/ISO_Num_Code,"
-            "$i/ISO_Char_Code,"
-            "$i/EngName,"
-            "$i/Name,"
-            "$i/Nominal,"
-            "$v/Value"
-            "}"
-            "</item>"
-            "}"
-            "</library>";
+            "fn:concat($i/ISO_Num_Code, ';', $i/ISO_Char_Code, ';', $i/EngName"
+            ", ';', $i/Name, ';', $i/Nominal, ';', $v/Value, ';')";
+
     const QBuffer libBuffer = new QBuffer(libQByteArray);
     const QBuffer quotesBuffer = new QBuffer(quotesQByteArray);
     QXmlQuery query;
     query.bindVariable("lib", libBuffer);
     query.setQuery(strXQuery);
     if (!query.isValid()) {
-        qDebug() << "The query is invalid";
-
+        emit error(tr("The XQuery is invalid"));
+        qDebug() << "The XQuery is invalid";
     }
-    QString *strOutput = new QString();
-    if (!query.evaluateTo(strOutput)) {
-        qDebug() << "Can't evaluate the query";
+    else
+    {
+        if (!query.evaluateTo(strOutput)) {
+            emit error(tr("Can't evaluate the XQuery"));
+            qDebug() << "Can't evaluate the XQuery";
+        }
+        qDebug() << *strOutput;
     }
 }
 
