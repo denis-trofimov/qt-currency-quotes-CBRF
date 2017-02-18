@@ -54,9 +54,6 @@ Gui::Gui(QWidget* pwgt /*=0*/) : QWidget(pwgt)
 {
     currencyCode = "USD";
     date = (QDate().currentDate()).addDays(1);
-    QByteArray* libByteArray = new QByteArray();
-    QByteArray* quotesByteArray = new QByteArray();
-
     QGroupBox* settingsGroup = new QGroupBox(tr("Settings"));
 
     currencyCodeLineEdit = new QLineEdit(currencyCode);
@@ -232,11 +229,11 @@ void Gui::slotDownloadDone(const QUrl& url, const QByteArray& ba)
         }
         if(downloadingQuotes && strFileName.contains("XML_daily"))
         {
-            quotesByteArray = &ba;
+            quotesByteArray = ba;
         }
         if(downloadingLib && strFileName.contains("XML_valFull.asp"))
         {
-            libByteArray = &ba;
+            libByteArray = ba;
         }
         slotShadowUpdateQuotesLibrary();
     }
@@ -285,7 +282,7 @@ void Gui::slotParseSucces(const QString& valueParsed,
  */
 void Gui::slotShadowUpdateQuotesLibrary()
 {
-    if(libByteArray->isNull() || libByteArray->isEmpty())
+    if(libByteArray.isNull() || libByteArray.isEmpty())
     {
         QUrl url = QUrl("http://www.cbr.ru/scripts/XML_valFull.asp");
         QString strFileName = url.path().section('/', -1);
@@ -299,13 +296,13 @@ void Gui::slotShadowUpdateQuotesLibrary()
         else
         {
             if(fileLib.open(QIODevice::ReadOnly)) {
-                *libByteArray = fileLib.readAll();
+                libByteArray = fileLib.readAll();
                 fileLib.close();
             }
             downloadingLib = false;
         }
     }
-    if(quotesByteArray->isNull() || quotesByteArray->isEmpty())
+    if(quotesByteArray.isNull() || quotesByteArray.isEmpty())
     {
         QUrl url = QUrl(getLocalQuotesURL());
         QString strFileName = url.path().section('/', -1);
@@ -319,15 +316,15 @@ void Gui::slotShadowUpdateQuotesLibrary()
         else
         {
             if(fileQuotes.open(QIODevice::ReadOnly)) {
-                *quotesByteArray = fileQuotes.readAll();
+                quotesByteArray = fileQuotes.readAll();
                 fileQuotes.close();
             }
             downloadingQuotes = false;
         }
     }
 
-    if(!libByteArray->isNull() && !libByteArray->isEmpty()
-            && !quotesByteArray->isNull() && !quotesByteArray->isEmpty())
+    if(!libByteArray.isNull() && !libByteArray.isEmpty()
+            && !quotesByteArray.isNull() && !quotesByteArray.isEmpty())
         emit downloadedLibAndQuotes(libByteArray, quotesByteArray);
     return;
 }

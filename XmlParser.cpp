@@ -204,9 +204,9 @@ http://www.cbr.ru/scripts/XML_valFull.asp
 \endcode
 */
 // ----------------------------------------------------------------------
-void XmlParser::slotParseDailyQuotesLib(const QByteArray* libQByteArray,
-                                        const QByteArray* quotesQByteArray,
-                                        QString* strOutput)
+void XmlParser::slotParseDailyQuotesLib(const QByteArray& libQByteArray,
+                                        const QByteArray& quotesQByteArray,
+                                        QString& strOutput)
 {
 //    QString strXQuery =
 //            "declare variable $lib external;"
@@ -238,10 +238,13 @@ void XmlParser::slotParseDailyQuotesLib(const QByteArray* libQByteArray,
             "fn:concat($i/ISO_Num_Code, ';', $i/ISO_Char_Code, ';', $i/EngName"
             ", ';', $i/Name, ';', $i/Nominal, ';', $v/Value, ';')";
 
-    const QBuffer libBuffer = new QBuffer(libQByteArray);
-    const QBuffer quotesBuffer = new QBuffer(quotesQByteArray);
+    QBuffer libBuffer;
+    libBuffer.setData(libQByteArray);
+    QBuffer quotesBuffer;
+    quotesBuffer.setData(quotesQByteArray);
     QXmlQuery query;
-    query.bindVariable("lib", libBuffer);
+    query.bindVariable("lib", &libBuffer);
+    query.bindVariable("quotes", &quotesBuffer);
     query.setQuery(strXQuery);
     if (!query.isValid()) {
         emit error(tr("The XQuery is invalid"));
@@ -249,11 +252,11 @@ void XmlParser::slotParseDailyQuotesLib(const QByteArray* libQByteArray,
     }
     else
     {
-        if (!query.evaluateTo(strOutput)) {
+        if (!query.evaluateTo(&strOutput)) {
             emit error(tr("Can't evaluate the XQuery"));
             qDebug() << "Can't evaluate the XQuery";
         }
-        qDebug() << *strOutput;
+        qDebug() << strOutput;
     }
 }
 
