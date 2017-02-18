@@ -93,7 +93,8 @@ public:
 signals:
     void loadedXml(const QByteArray&, const QString&);
     void downloadedLibAndQuotes(const QByteArray& libByteArray,
-                                const QByteArray& quotesByteArray);
+                                const QByteArray& quotesByteArray,
+                                QString& strOutput);
 
 private slots:
     void slotGo              (                              );

@@ -230,33 +230,34 @@ void XmlParser::slotParseDailyQuotesLib(const QByteArray& libQByteArray,
 //            "</library>";
 
     QString strXQuery =
-            "declare variable $lib external;"
-            "declare variable $quotes external;"
-            "for $v in fn:doc($quotes)/ValCurs/Valute,"
-            "for $i in fn:doc($lib)/Valuta/Item[@ID/data() = $v/@ID/data()]"
-            "return"
+            "declare variable $lib external;\n"
+            "declare variable $quotes external;\n"
+            "for $v in fn:doc($quotes)/ValCurs/Valute,\n"
+            "    $i in fn:doc($lib)/Valuta/Item[data(@ID) = $v/data(@ID)]\n"
+            "return\n"
             "fn:concat($i/ISO_Num_Code, ';', $i/ISO_Char_Code, ';', $i/EngName"
-            ", ';', $i/Name, ';', $i/Nominal, ';', $v/Value, ';')";
+            ", ';', $i/Name, ';', $i/Nominal, ';', $v/Value, ';\n')";
 
     QBuffer libBuffer;
     libBuffer.setData(libQByteArray);
+    libBuffer.open(QIODevice::ReadOnly);
     QBuffer quotesBuffer;
     quotesBuffer.setData(quotesQByteArray);
+    quotesBuffer.open(QIODevice::ReadOnly);
+
     QXmlQuery query;
     query.bindVariable("lib", &libBuffer);
     query.bindVariable("quotes", &quotesBuffer);
+
     query.setQuery(strXQuery);
     if (!query.isValid()) {
         emit error(tr("The XQuery is invalid"));
-        qDebug() << "The XQuery is invalid";
     }
     else
     {
         if (!query.evaluateTo(&strOutput)) {
             emit error(tr("Can't evaluate the XQuery"));
-            qDebug() << "Can't evaluate the XQuery";
         }
-        qDebug() << strOutput;
     }
 }
 

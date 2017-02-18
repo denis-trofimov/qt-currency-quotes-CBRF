@@ -149,6 +149,11 @@ Gui::Gui(QWidget* pwgt /*=0*/) : QWidget(pwgt)
             );
     connect(xmlParserObject, &XmlParser::error,
             this, &Gui::slotError);
+
+    connect(this, &Gui::downloadedLibAndQuotes,
+            xmlParserObject, &XmlParser::slotParseDailyQuotesLib);
+
+    slotShadowUpdateQuotesLibrary();
 }
 
 // ----------------------------------------------------------------------
@@ -325,6 +330,10 @@ void Gui::slotShadowUpdateQuotesLibrary()
 
     if(!libByteArray.isNull() && !libByteArray.isEmpty()
             && !quotesByteArray.isNull() && !quotesByteArray.isEmpty())
-        emit downloadedLibAndQuotes(libByteArray, quotesByteArray);
+    {
+        QString strOutput = QString();
+        emit downloadedLibAndQuotes(libByteArray, quotesByteArray, strOutput);
+        qDebug() << strOutput;
+    }
     return;
 }
