@@ -153,7 +153,7 @@ Gui::Gui(QWidget* pwgt /*=0*/) : QWidget(pwgt)
     connect(this, &Gui::downloadedLibAndQuotes,
             xmlParserObject, &XmlParser::slotParseDailyQuotesLib);
 
-    slotShadowUpdateQuotesLibrary();
+    slotInitLibraryTodayQuotes();
 }
 
 // ----------------------------------------------------------------------
@@ -240,7 +240,7 @@ void Gui::slotDownloadDone(const QUrl& url, const QByteArray& ba)
         {
             libByteArray = ba;
         }
-        slotShadowUpdateQuotesLibrary();
+        slotInitLibraryTodayQuotes();
     }
     else
     {
@@ -268,8 +268,9 @@ void Gui::slotError(const QString& errorMessage)
 
 // ----------------------------------------------------------------------
 void Gui::slotParseSucces(const QString& valueParsed,
-                                    const QString& nominalParsed,
-                                    const QString& nameParsed)
+                          const QString& nominalParsed,
+                          const QString& nameParsed,
+                          const QString& numcodeParsed)
 {
     valueResultLabel->setText(valueParsed);
     nominalResultLabel->setText(nominalParsed);
@@ -279,13 +280,15 @@ void Gui::slotParseSucces(const QString& valueParsed,
                               valueParsed,
                               date,
                               nameParsed,
-                              nominalParsed);
+                              nominalParsed.toUInt(),
+                              numcodeParsed.toUInt()
+                              );
 }
 
 /*!
- * \brief Gui::slotShadowUpdateQuotesLibrary Populates library and quotes in DB.
+ * \brief Gui::slotInitLibraryTodayQuotes Populates library and quotes in DB.
  */
-void Gui::slotShadowUpdateQuotesLibrary()
+void Gui::slotInitLibraryTodayQuotes()
 {
     if(libByteArray.isNull() || libByteArray.isEmpty())
     {

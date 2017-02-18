@@ -55,6 +55,15 @@ void XmlParser::traverseNode(const QDomNode& node)
                 if(domElement.tagName()=="CharCode" &&
                         domElement.text()==currencyCode)
                 {
+                    {
+                        QDomElement prevDomElement
+                                = domNode.previousSiblingElement("NumCode");
+                        if(!prevDomElement.isNull())
+                            numcode = prevDomElement.text();
+                        else
+                            *errorMsg += tr("Tag <NumCode> not found in the XML"
+                                            " document.");
+                    }
                     //In example next sublings are Nominal, Name, Value
 
                     domElement = domNode.nextSiblingElement("Nominal");
@@ -94,7 +103,7 @@ void XmlParser::traverseNode(const QDomNode& node)
                     }
 
                     if(errorMsg->isEmpty())
-                        emit parseSucces(valueToRUR, nominal, name);
+                        emit parseSucces(valueToRUR, nominal, name, numcode);
                     else
                         emit error(*errorMsg);
 
@@ -208,27 +217,6 @@ void XmlParser::slotParseDailyQuotesLib(const QByteArray& libQByteArray,
                                         const QByteArray& quotesQByteArray,
                                         QString& strOutput)
 {
-//    QString strXQuery =
-//            "declare variable $lib external;"
-//            "declare variable $quotes external;"
-//            "<library>"
-//            "{"
-//            "for $v in fn:doc($quotes)/ValCurs/Valute,"
-//            "for $i in fn:doc($lib)/Valuta/Item[@ID/data() = $v/@ID/data()]"
-//            "return"
-//            "<item>"
-//            "{"
-//            "$i/ISO_Num_Code,"
-//            "$i/ISO_Char_Code,"
-//            "$i/EngName,"
-//            "$i/Name,"
-//            "$i/Nominal,"
-//            "$v/Value"
-//            "}"
-//            "</item>"
-//            "}"
-//            "</library>";
-
     QString strXQuery =
             "declare variable $lib external;\n"
             "declare variable $quotes external;\n"

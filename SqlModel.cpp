@@ -31,7 +31,10 @@
 
 #include "SqlModel.h"
 
-//Connection to SQL database
+/*!
+ * \brief SqlModel::slotCreateConnection Creates connection to database
+ * \return
+ */
 bool SqlModel::slotCreateConnection()
 {
     db = QSqlDatabase::addDatabase("QSQLITE");
@@ -46,28 +49,46 @@ bool SqlModel::slotCreateConnection()
         emit error(tr("Can not open local database SQLite."));
         return db.open();
     }
+    return true;
+}
 
+/*!
+ * \brief SqlModel::slotCreateTables Creates tables in database
+ *
+ * Table daily_quotes should contain data:
+
+\code xml
+    <NumCode>036</NumCode>
+    <Date></Date>
+    <Value>20,9568</Value>
+\endcode
+
+Table currency_lib should contain data:
+
+\code xml
+    <Name>Молдавский лей</Name>
+    <EngName>Moldova Lei</EngName>
+    <Nominal>10</Nominal>
+    <NumCode>498</NumCode>
+    <CharCode>MDL</CharCode>
+\endcode
+ */
+void SqlModel::slotCreateTables()
+{
     //Check which tables have
     QStringList tablesList = db.tables();
     if(!tablesList.contains("currency_lib"))
     {
-        //Format of <Valuta name="Foreign Currency Market Lib">
-        //<Item ID="R01235">
-        //<Name>Доллар США</Name>
-        //<EngName>US Dollar</EngName>
-        //<Nominal>1</Nominal>
-        //<ParentCode>R01235    </ParentCode>
-        //</Item>
-
         //Creating of the data base
         QSqlQuery query;
         QString sql =
-                "CREATE TABLE currency_lib ( "
-                "charcode TEXT PRIMARY KEY, "
-                "name       TEXT, "
-                "nominal    INTEGER NOT NULL "
+                "CREATE TABLE currency_lib ("
+                "numcode    INTEGER PRIMARY KEY"
+                ", nominal  INTEGER NOT NULL"
+                ", charcode TEXT  NOT NULL"
+                ", name     TEXT"
+                ", engname  TEXT"
                 ");";
-        //                "engname    TEXT"
         if(!query.exec(sql))
         {
             qDebug() << "Unable to create a table currency_lib in the database:"
@@ -80,25 +101,16 @@ bool SqlModel::slotCreateConnection()
 
     if(!tablesList.contains("daily_quotes"))
     {
-        //Format of <ValCurs Date="02.03.2002" name="Foreign Currency Market">
-        //<Valute ID="R01235">
-        //	<NumCode>840</NumCode>
-        //	<CharCode>USD</CharCode>
-        //	<Nominal>1</Nominal>
-        //	<Name>Доллар США</Name>
-        //	<Value>30,9436</Value>
-        //</Valute>
-
         //Creating of the data base
         QSqlQuery query;
         QString sql =
                 "CREATE TABLE daily_quotes ( "
-                "charcode TEXT, "
-                "date       INTEGER, "
-                "value      TEXT NOT NULL, "
-                "PRIMARY KEY(charcode, date), "
-                "CONSTRAINT quotes_lib FOREIGN KEY(charcode) REFERENCES "
-                "currency_lib ON DELETE CASCADE ON UPDATE CASCADE"
+                "numcode    INTEGER PRIMARY KEY"
+                ", date     TEXT NOT NULL"
+                ", value    TEXT NOT NULL"
+                ", PRIMARY KEY(numcode, date)"
+                ", CONSTRAINT quotes_lib FOREIGN KEY(numcode) REFERENCES"
+                " currency_lib ON DELETE CASCADE ON UPDATE CASCADE"
                 ");";
         if(!query.exec(sql))
         {
@@ -109,7 +121,6 @@ bool SqlModel::slotCreateConnection()
         }
         db.commit();
     }
-    return true;
 }
 
 SqlModel::SqlModel(QWidget *parent) :
@@ -121,25 +132,36 @@ SqlModel::SqlModel(QWidget *parent) :
 //        qDebug() << "Database and tables opened";
 }
 
-
+/*!
+ * \brief SqlModel::slotWrite
+ * \param charcode
+ * \param value
+ * \param date
+ * \param name
+ * \param nominal
+ * \param numcode
+ * \return
+ * TODO: rusian name or engname depends of locale.
+ */
 bool SqlModel::slotWrite(const QString& charcode,
-                    const QString& value,
-                    const QDate& date,
-                    const QString& name,
-                    const QString& nominal
-                    )
+                         const QString& value,
+                         const QDate& date,
+                         const QString& name,
+                         const uint nominal,
+                         const uint numcode)
 {
     //                    const QString& engname
-    //Write if not have same pair <charcode, value> in daily_quotes
+    //Write if not have same pair <numcode, value> in daily_quotes
     QSqlQueryModel quotesModel;
 
-    qlonglong daysJulian = date.toJulianDay();
+//    qlonglong daysJulian = date.toJulianDay();
     QString readQuotesQuery = "SELECT COUNT(*) "
                         "FROM daily_quotes "
-                        "WHERE charcode = '%1' AND date = '%2';";
+                        "WHERE numcode = '%1' AND date = '%2';";
     quotesModel.setQuery(readQuotesQuery
-                         .arg(charcode)
-                         .arg(QString::number(daysJulian, 10)));
+                         .arg(numcode)
+                         .arg(date.toString("yyyy/MM/dd"));
+//                         .arg(QString::number(daysJulian)));
 
     if (quotesModel.lastError().isValid()) {
         qDebug() << quotesModel.lastError();
@@ -159,9 +181,9 @@ bool SqlModel::slotWrite(const QString& charcode,
 
         QString readLibQuery = "SELECT COUNT(*) "
                             "FROM currency_lib "
-                            "WHERE charcode = '%1'";
+                            "WHERE numcode = '%1'";
         libModel.setQuery(readLibQuery
-                             .arg(charcode));
+                             .arg(numcode);
 
         if (libModel.lastError().isValid()) {
             qDebug() << libModel.lastError();
@@ -175,16 +197,19 @@ bool SqlModel::slotWrite(const QString& charcode,
             //key check (in future)
             QString insertLib = "INSERT INTO currency_lib "
                                 "("
-                                "charcode"
-                                ", name"
+                                "numcode"
+                                ", charcode"
                                 ", nominal"
+                                ", name"
                                 ")"
-                                " VALUES ('%1', '%2', '%3');";
-            //                    ", engname"
-            insertLib = insertLib.arg(charcode)
+                                " VALUES ('%1', '%2', '%3', '%4');";
+            insertLib = insertLib
+                    .arg(numcode)
+                    .arg(nominal)
+                    .arg(charcode)
                     .arg(name)
-                    .arg(nominal.toInt());
-            //                    .arg(engname);
+                    ;
+
             QSqlQuery libQuery = QSqlQuery(db);
             if(!libQuery.exec(insertLib))
             {
@@ -199,14 +224,16 @@ bool SqlModel::slotWrite(const QString& charcode,
 
         QString insertQuotes = "INSERT INTO daily_quotes "
                                "("
-                               "charcode"
+                               "numcode"
                                ", value"
                                ", date"
                                ")"
                                " VALUES ('%1', '%2', '%3');";
-        insertQuotes = insertQuotes.arg(charcode)
+        insertQuotes = insertQuotes
+                .arg(numcode)
                 .arg(value)
-                .arg(date.toJulianDay());
+                .arg(date.toString("yyyy/MM/dd"));
+//                .arg(date.toJulianDay());
 
         QSqlQuery quotesQuery = QSqlQuery(db);
 
@@ -229,14 +256,15 @@ bool SqlModel::slotReadCurrencyValue(const QString& charcode,
 {
     QSqlQuery quotesQuery = QSqlQuery(db);
 
-    qlonglong daysJulian = date.toJulianDay();
+//    qlonglong daysJulian = date.toJulianDay();
     QString readQString = "SELECT value, nominal, name "
                           "FROM daily_quotes as dq, currency_lib as cl "
-                          "WHERE dq.charcode = '%1' AND date = '%2' "
-                          "AND cl.charcode = '%1';";
+                          "WHERE cl.charcode = '%1' AND dq.date = '%2' "
+                          "AND dq.numcode = cl.numcode;";
     readQString = readQString
-                .arg(charcode)
-                .arg(QString::number(daysJulian, 10));
+            .arg(charcode)
+            .arg(date.toString("yyyy/MM/dd"));
+//                .arg(QString::number(daysJulian, 10));
 
     if(!quotesQuery.exec(readQString))
     {

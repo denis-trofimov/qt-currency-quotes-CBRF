@@ -105,8 +105,9 @@ private slots:
 //    void slotError           (               );
     void slotParseSucces(const QString& valueParsed,
                          const QString& nominalParsed,
-                         const QString& nameParsed);
-    void slotShadowUpdateQuotesLibrary();
+                         const QString& nameParsed,
+                         const QString& numcodeParsed);
+    void slotInitLibraryTodayQuotes();
 
 };
 

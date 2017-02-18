@@ -61,15 +61,17 @@ public slots:
     bool slotCreateConnection();
     bool slotWrite(const QString& charcode,
                    const QString& value,
-                   const QDate &date,
+                   const QDate& date,
                    const QString& name,
-                   const QString& nominal);
+                   const uint nominal,
+                   const uint numcode);
     bool slotReadCurrencyValue(const QString& charcode,
                                const QDate &date,
                                QString &value,
                                QString &nominal,
                                QString &name);
     void slotView();
+    void slotCreateTables();
 //    void isValidCurrencyLib();
 //    void slotSetCurrencyLib(const QString* strLibQuotes,
 //                            const QDate &date);

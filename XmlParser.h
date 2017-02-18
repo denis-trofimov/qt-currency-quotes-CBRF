@@ -51,6 +51,7 @@ private:
     QString valueToRUR;
     QString nominal;
     QString name;
+    QString numcode;
     QString* errorMsg;
 
 public:
@@ -59,8 +60,9 @@ public:
 signals:
     void error(const QString&);
     void parseSucces(const QString& valueParsed,
-                         const QString& nominalParsed,
-                         const QString& nameParsed);
+                     const QString& nominalParsed,
+                     const QString& nameParsed,
+                     const QString& numcode);
 
 public slots:
     void slotSetCurrencyName(const QString&);
