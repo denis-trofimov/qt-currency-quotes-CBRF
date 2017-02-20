@@ -119,6 +119,7 @@ Gui::Gui(QWidget* pwgt /*=0*/) : QWidget(pwgt)
             this, &Gui::slotError);
     bool isConnected = sqlModelObject->slotCreateConnection();
 //        qDebug() << "Database and tables opened";
+    sqlModelObject->slotCreateTables();
 
     connect(viewButton, &QPushButton::clicked,
             sqlModelObject, &SqlModel::slotView);

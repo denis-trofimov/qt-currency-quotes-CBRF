@@ -94,7 +94,6 @@ void SqlModel::slotCreateTables()
             qDebug() << "Unable to create a table currency_lib in the database:"
                      << db.lastError();
             emit error(tr("Unable to create a table currency_lib in the database."));
-            return false;
         }
         db.commit();
     }
@@ -105,8 +104,8 @@ void SqlModel::slotCreateTables()
         QSqlQuery query;
         QString sql =
                 "CREATE TABLE daily_quotes ( "
-                "numcode    INTEGER PRIMARY KEY"
-                ", date     TEXT NOT NULL"
+                "numcode    INTEGER"
+                ", date     TEXT"
                 ", value    TEXT NOT NULL"
                 ", PRIMARY KEY(numcode, date)"
                 ", CONSTRAINT quotes_lib FOREIGN KEY(numcode) REFERENCES"
@@ -117,7 +116,6 @@ void SqlModel::slotCreateTables()
             qDebug() << "Unable to create a table daily_quotes in the database:"
                      << db.lastError();
             emit error(tr("Unable to create a table daily_quotes in the database."));
-            return false;
         }
         db.commit();
     }
@@ -160,7 +158,7 @@ bool SqlModel::slotWrite(const QString& charcode,
                         "WHERE numcode = '%1' AND date = '%2';";
     quotesModel.setQuery(readQuotesQuery
                          .arg(numcode)
-                         .arg(date.toString("yyyy/MM/dd"));
+                         .arg(date.toString("yyyy/MM/dd")));
 //                         .arg(QString::number(daysJulian)));
 
     if (quotesModel.lastError().isValid()) {
@@ -182,8 +180,7 @@ bool SqlModel::slotWrite(const QString& charcode,
         QString readLibQuery = "SELECT COUNT(*) "
                             "FROM currency_lib "
                             "WHERE numcode = '%1'";
-        libModel.setQuery(readLibQuery
-                             .arg(numcode);
+        libModel.setQuery(readLibQuery.arg(numcode));
 
         if (libModel.lastError().isValid()) {
             qDebug() << libModel.lastError();
