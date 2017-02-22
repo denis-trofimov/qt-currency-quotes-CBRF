@@ -112,9 +112,9 @@ Gui::Gui(QWidget* pwgt /*=0*/,
     resultGroup->setLayout(resultLayout);
 
     QGridLayout* urlLayout = new QGridLayout;
-    urlLayout->addWidget(urlLineEdit, 0, 0);
+    urlLayout->addWidget(downProgressBar, 0, 0);
     urlLayout->addWidget(goButton, 0, 1);
-    urlLayout->addWidget(downProgressBar, 1, 0, 1, 1);
+    urlLayout->addWidget(urlLineEdit, 1, 0, 1, 2);
     urlGroup->setLayout(urlLayout);
 
     QVBoxLayout* pLayout = new QVBoxLayout;
