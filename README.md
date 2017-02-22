@@ -1,6 +1,6 @@
-# Qt app for getting currency quotes from Central Bank of Russian Fedderation
+# Qt app for getting currency quotes from Central Bank of Russian Federation
 
-This application gets currency quotes from Central Bank of Russian Fedderation site.
+This application gets currency quotes from Central Bank of Russian Federation site.
 URLs like "http://www.cbr.ru/scripts/XML_daily.asp?" are processed.
 * It now stores quotes in local database SQLite.
 * I18n: system locale dependent UI, english default, russian secondary.

@@ -352,6 +352,10 @@ void Gui::slotInitLibraryTodayQuotes()
             && !quotesByteArray.isNull() && !quotesByteArray.isEmpty())
     {
         QString strOutput = QString();
+
+        downloadingLib = false;
+        downloadingQuotes = false;
+
         emit downloadedLibAndQuotes(libByteArray, quotesByteArray, strOutput);
 //        qDebug() << strOutput;
     }
