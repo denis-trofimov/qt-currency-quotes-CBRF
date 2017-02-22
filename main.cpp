@@ -44,19 +44,19 @@ int main(int argc, char** argv)
 
     TranslationsEnum userInputLocale = UNSET;
 
-    if(argc == 2)
+    if(argc >= 2)
     {
-        if(argv[1] == "en")
+        if(std::string(argv[1]) == "en")
         {
-            translator.load("qt-currency-quotes-CBRF_en.qm", ":/");
             userInputLocale = EN;
+            translator.load("qt-currency-quotes-CBRF_en.qm", ":/");
         }
         else
         {
-            if(argv[1] == "ru")
+            if(std::string(argv[1]) == "ru")
             {
-                translator.load("qt-currency-quotes-CBRF_ru.qm", ":/");
                 userInputLocale = RU;
+                translator.load("qt-currency-quotes-CBRF_ru.qm", ":/");
             }
         }
     }

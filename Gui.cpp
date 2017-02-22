@@ -44,15 +44,19 @@ QString Gui::getLocalQuotesURL()
     {
     case EN:
         return QString("http://www.cbr.ru/scripts/XML_daily_eng.asp");
+
     case RU:
         return QString("http://www.cbr.ru/scripts/XML_daily.asp");
+
     case UNSET:
+    default:
     {
         if(QLocale::system().language() == QLocale::Russian)
             return QString("http://www.cbr.ru/scripts/XML_daily.asp");
         else
             return QString("http://www.cbr.ru/scripts/XML_daily_eng.asp");
     }
+
     }
 }
 
@@ -60,7 +64,8 @@ QString Gui::getLocalQuotesURL()
  * \brief Gui::Gui Shows main window QWidget
  * \param[in] pwgt parent widget
  */
-Gui::Gui(QWidget* pwgt /*=0*/, const TranslationsEnum & userInputLocale) : QWidget(pwgt)
+Gui::Gui(QWidget* pwgt /*=0*/,
+         const TranslationsEnum & userInputLocale) : QWidget(pwgt)
 {
     setUserRequiredLocale(userInputLocale);
     currencyCode = "USD";
