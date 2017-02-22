@@ -34,6 +34,7 @@
 #include <QTranslator>
 #include "Gui.h"
 
+
 // ----------------------------------------------------------------------
 int main(int argc, char** argv)
 {
@@ -41,16 +42,35 @@ int main(int argc, char** argv)
 
     QTranslator translator;
 
-    translator.load(QLocale::system(),
-                    "qt-currency-quotes-CBRF", "_", ":/", ".qm");
+    TranslationsEnum userInputLocale = UNSET;
 
-//  translator.load("qt-currency-quotes-CBRF_en.qm", ":/");
+    if(argc == 2)
+    {
+        if(argv[1] == "en")
+        {
+            translator.load("qt-currency-quotes-CBRF_en.qm", ":/");
+            userInputLocale = EN;
+        }
+        else
+        {
+            if(argv[1] == "ru")
+            {
+                translator.load("qt-currency-quotes-CBRF_ru.qm", ":/");
+                userInputLocale = RU;
+            }
+        }
+    }
+    else
+    {
+        translator.load(QLocale::system(),
+                        "qt-currency-quotes-CBRF", "_", ":/", ".qm");
+    }
 
     app.installTranslator(&translator);
 
-    Gui downloader;
+    Gui mainWindow(0, userInputLocale);
 
-    downloader.show();
+    mainWindow.show();
 
     return app.exec();
 }

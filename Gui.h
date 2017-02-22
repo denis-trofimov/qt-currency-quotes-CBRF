@@ -47,6 +47,13 @@ class XmlParser;
 class QLabel;
 class QDate;
 
+enum TranslationsEnum
+{
+    UNSET,
+    EN,
+    RU
+};
+
 // ======================================================================
 class Gui : public QWidget {
 Q_OBJECT
@@ -84,11 +91,15 @@ private:
 
     QByteArray libByteArray;
     QByteArray quotesByteArray;
+    TranslationsEnum userRequiredLocale;
 
 public:
-    Gui(QWidget* pwgt = 0);
+    Gui(QWidget* pwgt = 0, const TranslationsEnum& userInputLocale = UNSET);
 
     QString getLocalQuotesURL();
+    void inline setUserRequiredLocale(const TranslationsEnum& userInputLocale) {
+        userRequiredLocale = userInputLocale;}
+
 
 signals:
     void loadedXml(const QByteArray&, const QString&);

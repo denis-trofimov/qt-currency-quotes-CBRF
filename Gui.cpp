@@ -40,18 +40,29 @@
  */
 QString Gui::getLocalQuotesURL()
 {
-    if(QLocale::system().language() == QLocale::Russian)
-        return QString("http://www.cbr.ru/scripts/XML_daily.asp");
-    else
+    switch(userRequiredLocale)
+    {
+    case EN:
         return QString("http://www.cbr.ru/scripts/XML_daily_eng.asp");
+    case RU:
+        return QString("http://www.cbr.ru/scripts/XML_daily.asp");
+    case UNSET:
+    {
+        if(QLocale::system().language() == QLocale::Russian)
+            return QString("http://www.cbr.ru/scripts/XML_daily.asp");
+        else
+            return QString("http://www.cbr.ru/scripts/XML_daily_eng.asp");
+    }
+    }
 }
 
 /*!
  * \brief Gui::Gui Shows main window QWidget
  * \param[in] pwgt parent widget
  */
-Gui::Gui(QWidget* pwgt /*=0*/) : QWidget(pwgt)
+Gui::Gui(QWidget* pwgt /*=0*/, const TranslationsEnum & userInputLocale) : QWidget(pwgt)
 {
+    setUserRequiredLocale(userInputLocale);
     currencyCode = "USD";
     date = (QDate().currentDate()).addDays(1);
     QGroupBox* settingsGroup = new QGroupBox(tr("Settings"));
@@ -337,7 +348,7 @@ void Gui::slotInitLibraryTodayQuotes()
     {
         QString strOutput = QString();
         emit downloadedLibAndQuotes(libByteArray, quotesByteArray, strOutput);
-        qDebug() << strOutput;
+//        qDebug() << strOutput;
     }
     return;
 }
